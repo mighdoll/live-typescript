@@ -81,9 +81,6 @@ function initializeMonaco() {
   }
 
   languages.typescript.typescriptDefaults.setEagerModelSync(true);
-  const uri = Uri.parse("file:///index.ts");
-  const model = editor.createModel(exampleCode, "typescript", uri);
-  return model;
 }
 
 initializeMonaco();
@@ -129,6 +126,7 @@ export function CodeEditor(props: CodeEditorProps): JSX.Element {
       <Editor
         {...{ height, width }}
         defaultLanguage="typescript"
+        defaultValue={exampleCode}
         defaultPath="file:///index.ts"
         options={options}
         onChange={codeChange}
