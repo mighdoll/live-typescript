@@ -1,8 +1,19 @@
 import React, { useEffect } from "react";
 import Editor, { useMonaco } from "@monaco-editor/react";
 
-export function CodeEditor(): JSX.Element {
+interface CodeEditorProps {
+  height?: number | string;
+  width?: number | string;
+}
+
+const defaults: CodeEditorProps = {
+  height: "400px",
+  width: "500px",
+};
+
+export function CodeEditor(props: CodeEditorProps): JSX.Element {
   const monaco = useMonaco();
+  const { height, width } = { ...defaults, ...props };
 
   useEffect(() => {
     console.log("monaco", monaco);
@@ -11,13 +22,11 @@ export function CodeEditor(): JSX.Element {
   return (
     <div>
       <Editor
-        height="90vh"
+        {...{ height, width }}
         defaultLanguage="javascript"
         defaultValue="// some comment"
       />
-      <iframe>
-        tbd
-      </iframe>
+      <iframe>tbd</iframe>
     </div>
   );
 }
