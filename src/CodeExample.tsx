@@ -2,6 +2,7 @@ import Editor, { useMonaco } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
 import React, { useCallback, useEffect } from "react";
 import "./codeExample.css";
+import { transpile } from "./Transpile.js";
 
 interface CodeEditorProps {
   height?: number | string;
@@ -14,7 +15,7 @@ const defaults: CodeEditorProps = {
 };
 
 export function CodeEditor(props: CodeEditorProps): JSX.Element {
-  const monaco = useMonaco();
+  // const monaco = useMonaco();
   const { height, width } = { ...defaults, ...props };
 
   const options: editor.IStandaloneEditorConstructionOptions = {
@@ -25,18 +26,20 @@ export function CodeEditor(props: CodeEditorProps): JSX.Element {
   };
 
   const codeChange = useCallback((value: any) => {
-    console.log({ value });
+    const src = value as string;
+    const compiled = transpile(src);
+    console.log({ compiled });
   }, []);
 
   useEffect(() => {
-    console.log("monaco", monaco);
+    // console.log("monaco", monaco);
   });
 
   return (
     <div className="codeContainer">
       <Editor
         {...{ height, width }}
-        defaultLanguage="javascript"
+        defaultLanguage="typescript"
         defaultValue="// some comment"
         options={options}
         onChange={codeChange}
