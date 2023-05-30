@@ -1,6 +1,6 @@
-import React, { CSSProperties, useEffect } from "react";
 import Editor, { useMonaco } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
+import React, { useCallback, useEffect } from "react";
 import "./codeExample.css";
 
 interface CodeEditorProps {
@@ -24,6 +24,10 @@ export function CodeEditor(props: CodeEditorProps): JSX.Element {
     fontSize: 16,
   };
 
+  const codeChange = useCallback((value: any) => {
+    console.log({ value });
+  }, []);
+
   useEffect(() => {
     console.log("monaco", monaco);
   });
@@ -35,6 +39,7 @@ export function CodeEditor(props: CodeEditorProps): JSX.Element {
         defaultLanguage="javascript"
         defaultValue="// some comment"
         options={options}
+        onChange={codeChange}
       />
       <iframe className="codeExample">tbd</iframe>
     </div>
