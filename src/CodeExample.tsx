@@ -30,7 +30,7 @@ const defaults: CodeEditorProps = {
 export function CodeEditor(props: CodeEditorProps): JSX.Element {
   // const monaco = useMonaco();
   const { height, width, imports } = { ...defaults, ...props };
-  const [compiledCode, setCompiledCode] = useState("");
+  const [compiledCode, setCompiledCode] = useState(transpile(exampleCode));
 
   const options: editor.IStandaloneEditorConstructionOptions = {
     readOnly: false,
