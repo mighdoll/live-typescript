@@ -1,5 +1,7 @@
-import React, { useEffect } from "react";
+import React, { CSSProperties, useEffect } from "react";
 import Editor, { useMonaco } from "@monaco-editor/react";
+import { editor } from "monaco-editor";
+import "./codeExample.css";
 
 interface CodeEditorProps {
   height?: number | string;
@@ -15,18 +17,24 @@ export function CodeEditor(props: CodeEditorProps): JSX.Element {
   const monaco = useMonaco();
   const { height, width } = { ...defaults, ...props };
 
+  const options: editor.IStandaloneEditorConstructionOptions = {
+    readOnly: false,
+    minimap: { enabled: false },
+  };
+
   useEffect(() => {
     console.log("monaco", monaco);
   });
 
   return (
-    <div>
+    <div className="codeContainer">
       <Editor
         {...{ height, width }}
         defaultLanguage="javascript"
         defaultValue="// some comment"
+        options={options}
       />
-      <iframe>tbd</iframe>
+      <iframe className="codeExample">tbd</iframe>
     </div>
   );
 }

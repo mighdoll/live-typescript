@@ -1,0 +1,7 @@
+.codeContainer {
+  display: flex;
+}
+.codeExample {
+  height: 300px;
+  width: 300px;
+}
