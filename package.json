@@ -3,10 +3,12 @@
   "version": "0.0.1",
   "dependencies": {
     "@monaco-editor/react": "^4.5.1",
+    "@webgpu/types": "^0.1.32",
     "monaco-editor": "^0.38.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "sucrase": "^3.32.0"
+    "sucrase": "^3.32.0",
+    "thimbleberry": "^0.1.10"
   },
   "scripts": {
     "dev": "vite"

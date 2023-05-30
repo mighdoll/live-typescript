@@ -1,8 +1,31 @@
-import Editor, { useMonaco } from "@monaco-editor/react";
-import { editor } from "monaco-editor";
+import Editor, { useMonaco, loader } from "@monaco-editor/react";
+import * as monaco from "monaco-editor";
+import { editor, languages, Uri } from "monaco-editor";
 import React, { useCallback, useEffect, useState } from "react";
 import "./codeExample.css";
 import { importMapScript, transpile } from "./Transpile.js";
+import thimbleberryPackage from "/node_modules/thimbleberry/package.json?raw";
+import webgpuTypes from "/node_modules/@webgpu/types/dist/index.d.ts?raw";
+import webgpuPackage from "/node_modules/@webgpu/types/package.json?raw";
+import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
+import tsWorker from "monaco-editor/esm/vs/language/typescript/ts.worker?worker";
+
+const modules = import.meta.glob("/node_modules/thimbleberry/dist/**/*.d.ts", {
+  as: "raw",
+  eager: true,
+});
+
+window.MonacoEnvironment = {
+  getWorker(_moduleId: unknown, label: string) {
+    switch (label) {
+      case "typescript":
+      case "javascript":
+        return new tsWorker();
+      default:
+        return new editorWorker();
+    }
+  },
+};
 
 const exampleCode = `
   import { labeledGpuDevice } from "thimbleberry";
@@ -27,8 +50,45 @@ const defaults: CodeEditorProps = {
   imports: ["thimbleberry"],
 };
 
+function initializeMonaco() {
+  loader.config({ monaco }); // use our monaco instead of react bundler
+
+  languages.typescript.typescriptDefaults.addExtraLib(
+    webgpuTypes,
+    `file:///node_modules/@webgpu/types/dist/index.d.ts`
+  );
+  languages.typescript.typescriptDefaults.addExtraLib(
+    webgpuPackage,
+    `file:///node_modules/@webgpu/types/package.json`
+  );
+  languages.typescript.typescriptDefaults.setCompilerOptions({
+    types: ["@webgpu/types"],
+    moduleResolution: languages.typescript.ModuleResolutionKind.NodeJs,
+    module: languages.typescript.ModuleKind.ESNext,
+  });
+
+  languages.typescript.typescriptDefaults.addExtraLib(
+    thimbleberryPackage,
+    `file:///node_modules/thimbleberry/package.json`
+  );
+
+  for (const [path, source] of Object.entries(modules)) {
+    console.log(path);
+    languages.typescript.typescriptDefaults.addExtraLib(
+      source,
+      `file://${path}`
+    );
+  }
+
+  languages.typescript.typescriptDefaults.setEagerModelSync(true);
+  const uri = Uri.parse("file:///index.ts");
+  const model = editor.createModel(exampleCode, "typescript", uri);
+  return model;
+}
+
+initializeMonaco();
+
 export function CodeEditor(props: CodeEditorProps): JSX.Element {
-  // const monaco = useMonaco();
   const { height, width, imports } = { ...defaults, ...props };
   const [compiledCode, setCompiledCode] = useState(transpile(exampleCode));
 
@@ -49,9 +109,6 @@ export function CodeEditor(props: CodeEditorProps): JSX.Element {
     [setCompiledCode]
   );
 
-  useEffect(() => {
-    // console.log("monaco", monaco);
-  });
   const importScript = importMapScript(imports!);
 
   const html = `
@@ -72,7 +129,7 @@ export function CodeEditor(props: CodeEditorProps): JSX.Element {
       <Editor
         {...{ height, width }}
         defaultLanguage="typescript"
-        defaultValue={exampleCode}
+        defaultPath="file:///index.ts"
         options={options}
         onChange={codeChange}
       />
