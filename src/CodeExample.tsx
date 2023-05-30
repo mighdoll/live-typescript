@@ -20,6 +20,8 @@ export function CodeEditor(props: CodeEditorProps): JSX.Element {
   const options: editor.IStandaloneEditorConstructionOptions = {
     readOnly: false,
     minimap: { enabled: false },
+    lineNumbers: "off",
+    fontSize: 16,
   };
 
   useEffect(() => {
