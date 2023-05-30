@@ -11,3 +11,17 @@ export function transpile(code: string): string {
     return "??";
   }
 }
+
+export function importMapScript(packages:string[]):string {
+  const imports = packages.map(pkg => `"${pkg}": "https://esm.sh/${pkg}"`).join(",\n")
+  return `
+      <script type="importmap">
+        {
+          "imports": {
+            ${imports}
+          }
+        }
+      </script>
+  `;
+
+}
