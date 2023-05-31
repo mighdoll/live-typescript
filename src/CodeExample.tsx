@@ -37,7 +37,7 @@ interface CodeEditorProps {
 const defaults: CodeEditorProps = {
   height: "400px",
   width: "500px",
-  imports: ["thimbleberry"],
+  imports: ["thimbleberry", "stoneberry/scan"],
   code: "// hello world",
 };
 
@@ -100,7 +100,6 @@ export function CodeEditor(props: CodeEditorProps): JSX.Element {
 }
 
 function initializeMonaco(monaco: Monaco) {
-  monaco.languages.typescript.typescriptDefaults.addExtraLib(webgpuTypes);
   addLocalTsLib(monaco, webgpuTypes, `@webgpu/types/dist/index.d.ts`);
   addLocalTsLib(monaco, webgpuPackage, `@webgpu/types/package.json`);
 
@@ -111,28 +110,27 @@ function initializeMonaco(monaco: Monaco) {
   });
 
   addLocalTsLib(monaco, thimbleberryPackage, `thimbleberry/package.json`);
-  // addTsLib(monaco, stoneberryPackage, `stoneberry/package.json`);
+  addLocalTsLib(monaco, stoneberryPackage, `stoneberry/package.json`);
 
   addTypes(monaco, thimbleberryTypes);
-  // addTypes(monaco, stoneberryTypes);
+  addTypes(monaco, stoneberryTypes);
 
   monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true);
 }
 
 function addTypes(monaco: Monaco, types: Record<string, string>) {
   for (const [path, source] of Object.entries(types)) {
-    console.log("path:", path);
     const filePath = `file://${path}`;
-    monaco.languages.typescript.typescriptDefaults.addExtraLib(
-      source,
-      filePath
-    );
+    addTsLib(monaco, source, filePath);
   }
 }
 
-/** add a typescript default library and set path in node modules */
-function addLocalTsLib(monaco: Monaco, source: string, path?: string) {
+/** add a typescript default library and set path as if from local node_modules */
+function addLocalTsLib(monaco: Monaco, source: string, path?: string): void {
   const filePath = path && `file:///node_modules/${path}`;
-  console.log("tslib path", filePath);
+  addTsLib(monaco, source, filePath);
+}
+
+function addTsLib(monaco: Monaco, source: string, filePath?: string): void {
   monaco.languages.typescript.typescriptDefaults.addExtraLib(source, filePath);
 }
