@@ -16,6 +16,9 @@ dependencies:
   react-dom:
     specifier: ^18.2.0
     version: 18.2.0(react@18.2.0)
+  stoneberry:
+    specifier: ^0.1.4
+    version: 0.1.4
   sucrase:
     specifier: ^3.32.0
     version: 3.32.0
@@ -1704,6 +1707,14 @@ packages:
 
   /state-local@1.0.7:
     resolution: {integrity: sha512-HTEHMNieakEnoe33shBYcZ7NX83ACUjCu8c40iOGEZsngj9zRnkqS9j1pqQPXwobB0ZcVTk27REb7COQ0UR59w==}
+    dev: false
+
+  /stoneberry@0.1.4:
+    resolution: {integrity: sha512-nTzHZYq62CUyMvIZq7b8c00e+AyJ2rlR/8RD9p/Fzg+mhJB+TUdJ6yxFDh+LXYIzXDkbt1Y8pb9aiQpI1CIXMA==}
+    dependencies:
+      '@reactively/core': 0.0.8
+      '@reactively/decorate': 0.0.4
+      thimbleberry: 0.1.10
     dev: false
 
   /strip-ansi@6.0.1:
