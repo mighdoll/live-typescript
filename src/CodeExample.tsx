@@ -1,29 +1,17 @@
 import Editor, { useMonaco } from "@monaco-editor/react";
-import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
-import tsWorker from "monaco-editor/esm/vs/language/typescript/ts.worker?worker";
+import * as monaco_editor from "monaco-editor";
 import { useCallback, useEffect, useState } from "react";
 import { importMapScript, transpile } from "./Transpile.js";
 import "./codeExample.css";
 import webgpuTypes from "/node_modules/@webgpu/types/dist/index.d.ts?raw";
 import webgpuPackage from "/node_modules/@webgpu/types/package.json?raw";
 import thimbleberryPackage from "/node_modules/thimbleberry/package.json?raw";
+type Monaco = typeof monaco_editor;
 
 const modules = import.meta.glob("/node_modules/thimbleberry/dist/**/*.d.ts", {
   as: "raw",
   eager: true,
 });
-
-window.MonacoEnvironment = {
-  getWorker(_moduleId: unknown, label: string) {
-    switch (label) {
-      case "typescript":
-      case "javascript":
-        return new tsWorker();
-      default:
-        return new editorWorker();
-    }
-  },
-};
 
 const exampleCode = `
   import { labeledGpuDevice } from "thimbleberry";
@@ -48,7 +36,7 @@ const defaults: CodeEditorProps = {
   imports: ["thimbleberry"],
 };
 
-function initializeMonaco(monaco: typeof import("monaco-editor")) {
+function initializeMonaco(monaco: Monaco) {
   monaco.languages.typescript.typescriptDefaults.addExtraLib(
     webgpuTypes,
     `file:///node_modules/@webgpu/types/dist/index.d.ts`
@@ -84,7 +72,7 @@ export function CodeEditor(props: CodeEditorProps): JSX.Element {
   const { height, width, imports } = { ...defaults, ...props };
   const [compiledCode, setCompiledCode] = useState(transpile(exampleCode));
 
-  const options: monaco.editor.IStandaloneEditorConstructionOptions = {
+  const options: monaco_editor.editor.IStandaloneEditorConstructionOptions = {
     readOnly: false,
     minimap: { enabled: false },
     lineNumbers: "off",
