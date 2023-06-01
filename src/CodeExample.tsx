@@ -110,7 +110,7 @@ function initializeMonaco(monaco: Monaco) {
 
   monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
     types: ["@webgpu/types"],
-    moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+    moduleResolution: 100 as any, // "bundler" 
     module: monaco.languages.typescript.ModuleKind.ESNext,
   });
 
