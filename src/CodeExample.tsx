@@ -1,4 +1,6 @@
 import Editor, { useMonaco } from "@monaco-editor/react";
+import { loader } from '@monaco-editor/react';
+
 import * as monaco_editor from "monaco-editor";
 import { useCallback, useEffect, useState } from "react";
 import { importMapScript, transpile } from "./Transpile.js";
@@ -9,6 +11,9 @@ import thimbleberryPackage from "/node_modules/thimbleberry/package.json?raw";
 import stoneberryPackage from "/node_modules/stoneberry/package.json?raw";
 
 type Monaco = typeof monaco_editor;
+
+// you can change the source of the monaco files
+loader.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.38.0/min/vs'} });
 
 const thimbleberryTypes = import.meta.glob(
   "/node_modules/thimbleberry/dist/**/*.d.ts",
