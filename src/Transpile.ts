@@ -12,8 +12,10 @@ export function transpile(code: string): string {
   }
 }
 
-export function importMapScript(packages:string[]):string {
-  const imports = packages.map(pkg => `"${pkg}": "https://esm.sh/${pkg}"`).join(",\n")
+export function importMapScript(packages: string[]): string {
+  const imports = packages
+    .map((pkg) => `"${pkg}": "https://esm.sh/${pkg}"`)
+    .join(",\n");
   return `
       <script type="importmap">
         {
@@ -23,5 +25,4 @@ export function importMapScript(packages:string[]):string {
         }
       </script>
   `;
-
 }
