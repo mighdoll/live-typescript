@@ -9,7 +9,8 @@ import webgpuTypes from "/node_modules/@webgpu/types/dist/index.d.ts?raw";
 import webgpuPackage from "/node_modules/@webgpu/types/package.json?raw";
 import thimbleberryPackage from "/node_modules/thimbleberry/package.json?raw";
 import stoneberryPackage from "/node_modules/stoneberry/package.json?raw";
-import exampleUtils from "/node_modules/stoneberry/packages/examples/src/exampleUtils.ts?raw";
+import exampleUtilsTs from "/node_modules/stoneberry/packages/examples/src/exampleUtils.ts?raw";
+import exampleUtilsJs from "/node_modules/stoneberry/dist/exampleUtils.js?raw";
 
 type Monaco = typeof monaco_editor;
 
@@ -75,7 +76,12 @@ export function CodeEditor(props: CodeEditorProps): JSX.Element {
     [setCompiledCode]
   );
 
-  const importScript = importMapScript(imports!);
+  const utilsBlob = new Blob([exampleUtilsJs], { type: "text/javascript" }); 
+  const utilsUrl = URL.createObjectURL(utilsBlob);
+
+  const importScript = importMapScript(imports!, {
+    "stoneberry/examples": utilsUrl,
+  });
 
   const html = `
     <html>
@@ -118,7 +124,7 @@ function initializeMonaco(monaco: Monaco) {
 
   addLocalTsLib(monaco, thimbleberryPackage, `thimbleberry/package.json`);
   addLocalTsLib(monaco, stoneberryPackage, `stoneberry/package.json`);
-  addLocalTsLib(monaco, exampleUtils, `./exampleUtils.ts`);
+  addLocalTsLib(monaco, exampleUtilsTs, `./exampleUtils.ts`);
 
   addTypes(monaco, thimbleberryTypes);
   addTypes(monaco, stoneberryTypes);
