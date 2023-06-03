@@ -1,5 +1,5 @@
 import Editor, { useMonaco } from "@monaco-editor/react";
-import { loader } from '@monaco-editor/react';
+import { loader } from "@monaco-editor/react";
 
 import * as monaco_editor from "monaco-editor";
 import { useCallback, useEffect, useState } from "react";
@@ -9,11 +9,14 @@ import webgpuTypes from "/node_modules/@webgpu/types/dist/index.d.ts?raw";
 import webgpuPackage from "/node_modules/@webgpu/types/package.json?raw";
 import thimbleberryPackage from "/node_modules/thimbleberry/package.json?raw";
 import stoneberryPackage from "/node_modules/stoneberry/package.json?raw";
+import exampleUtils from "/node_modules/stoneberry/packages/examples/src/exampleUtils.ts?raw";
 
 type Monaco = typeof monaco_editor;
 
 // you can change the source of the monaco files
-loader.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.38.0/min/vs'} });
+loader.config({
+  paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.38.0/min/vs" },
+});
 
 const thimbleberryTypes = import.meta.glob(
   "/node_modules/thimbleberry/dist/**/*.d.ts",
@@ -30,7 +33,6 @@ const stoneberryTypes = import.meta.glob(
     eager: true,
   }
 );
-// console.log(stoneberryTypes);
 
 interface CodeEditorProps {
   height?: number | string;
@@ -41,7 +43,7 @@ interface CodeEditorProps {
 
 const defaults: CodeEditorProps = {
   height: "400px",
-  width: "500px",
+  width: "700px",
   imports: ["thimbleberry", "stoneberry/scan"],
   code: "// hello world",
 };
@@ -110,12 +112,13 @@ function initializeMonaco(monaco: Monaco) {
 
   monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
     types: ["@webgpu/types"],
-    moduleResolution: 100 as any, // "bundler" 
+    moduleResolution: 100 as any, // "bundler"
     module: monaco.languages.typescript.ModuleKind.ESNext,
   });
 
   addLocalTsLib(monaco, thimbleberryPackage, `thimbleberry/package.json`);
   addLocalTsLib(monaco, stoneberryPackage, `stoneberry/package.json`);
+  addLocalTsLib(monaco, exampleUtils, `./exampleUtils.ts`);
 
   addTypes(monaco, thimbleberryTypes);
   addTypes(monaco, stoneberryTypes);
