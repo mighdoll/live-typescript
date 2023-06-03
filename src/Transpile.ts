@@ -12,19 +12,18 @@ export function transpile(code: string): string {
   }
 }
 
-
 export function importMapScript(
   publicPackages: string[],
-  customImports?: Record<string, string>
+  customEntries?: Record<string, string>
 ): string {
   const publicImports = publicPackages.map(
     (pkg) => `"${pkg}": "https://esm.sh/${pkg}"`
   );
 
-  const customs = Object.entries(customImports || {}).map( 
+  const customImports = Object.entries(customEntries || {}).map(
     ([key, value]) => `"${key}": "${value}"`
   );
-  const imports = [...publicImports, ...customs].join(",\n            ");
+  const imports = [...publicImports, ...customImports].join(",\n            ");
   return `
       <script type="importmap">
         {
