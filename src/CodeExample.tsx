@@ -1,5 +1,4 @@
-import Editor, { useMonaco } from "@monaco-editor/react";
-import { loader } from "@monaco-editor/react";
+import Editor, { loader, useMonaco } from "@monaco-editor/react";
 
 import * as monaco_editor from "monaco-editor";
 import { useCallback, useEffect, useState } from "react";
@@ -7,33 +6,29 @@ import { importMapScript, transpile } from "./Transpile.js";
 import "./codeExample.css";
 import webgpuTypes from "/node_modules/@webgpu/types/dist/index.d.ts?raw";
 import webgpuPackage from "/node_modules/@webgpu/types/package.json?raw";
-import thimbleberryPackage from "/node_modules/thimbleberry/package.json?raw";
+import exampleUtilsJs from "/node_modules/stoneberry/dist/exampleUtils.js?raw";
 import stoneberryPackage from "/node_modules/stoneberry/package.json?raw";
 import exampleUtilsTs from "/node_modules/stoneberry/packages/examples/src/exampleUtils.ts?raw";
-import exampleUtilsJs from "/node_modules/stoneberry/dist/exampleUtils.js?raw";
+import thimbleberryPackage from "/node_modules/thimbleberry/package.json?raw";
 
 type Monaco = typeof monaco_editor;
 
-// you can change the source of the monaco files
 loader.config({
   paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.38.0/min/vs" },
 });
 
 const thimbleberryTypes = import.meta.glob(
-  "/node_modules/thimbleberry/dist/**/*.d.ts",
+  "/node_modules/thimbleberry/**/*.d.ts",
   {
     as: "raw",
     eager: true,
   }
 );
 
-const stoneberryTypes = import.meta.glob(
-  "/node_modules/stoneberry/dist/**/*.d.ts",
-  {
-    as: "raw",
-    eager: true,
-  }
-);
+const stoneberryTypes = import.meta.glob("/node_modules/stoneberry/**/*.d.ts", {
+  as: "raw",
+  eager: true,
+});
 
 interface CodeEditorProps {
   height?: number | string;
@@ -76,7 +71,7 @@ export function CodeEditor(props: CodeEditorProps): JSX.Element {
     [setCompiledCode]
   );
 
-  const utilsBlob = new Blob([exampleUtilsJs], { type: "text/javascript" }); 
+  const utilsBlob = new Blob([exampleUtilsJs], { type: "text/javascript" });
   const utilsUrl = URL.createObjectURL(utilsBlob);
 
   const importScript = importMapScript(imports!, {
