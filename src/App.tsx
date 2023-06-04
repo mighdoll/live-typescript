@@ -22,5 +22,12 @@ const exampleCode = `
 `;
 
 export function App(): JSX.Element {
-  return <CodeEditor setupTypes={installStoneberryTypes} code={exampleCode}/>;
+  const packages = ["thimbleberry", "stoneberry/scan", "stoneberry-examples"];
+  return (
+    <CodeEditor
+      {...{ packages }}
+      setupTypes={installStoneberryTypes}
+      code={exampleCode}
+    />
+  );
 }

@@ -7,26 +7,29 @@ import { importMapScript } from "./Imports.js";
 
 type SetupMonaco = (monaco: typeof monaco_editor) => void;
 
+// default loader is a bit out of date, update to latest available
 loader.config({
   paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.38.0/min/vs" },
 });
 
 interface CodeEditorProps {
+  setupTypes: SetupMonaco;
   height?: number | string;
   width?: number | string;
   code?: string;
-  setupTypes: SetupMonaco;
+  packages?: string[];
 }
 
 const defaults: Partial<CodeEditorProps> = {
   height: "400px",
   width: "700px",
   code: "// hello world",
+  packages: []
 };
 
 export function CodeEditor(props: CodeEditorProps): JSX.Element {
   const monaco = useMonaco();
-  const { height, width, code, setupTypes } = { ...defaults, ...props };
+  const { height, width, code, packages, setupTypes } = { ...defaults, ...props };
   const [compiledCode, setCompiledCode] = useState(transpile(code!));
 
   const options: monaco_editor.editor.IStandaloneEditorConstructionOptions = {
@@ -51,7 +54,7 @@ export function CodeEditor(props: CodeEditorProps): JSX.Element {
     [setCompiledCode]
   );
 
-  const importScript = importMapScript(["thimbleberry", "stoneberry/scan", "stoneberry-examples"])
+  const importScript = packages ? importMapScript(packages) : ""
 
   const html = `
     <html>
