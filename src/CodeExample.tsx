@@ -59,6 +59,12 @@ export function CodeEditor(props: CodeEditorProps): JSX.Element {
   const html = `
     <html>
       <head>
+      <style type="text/css">
+        body {
+          font-family: sans-serif;
+          font-size: 18px;
+        }
+      </style>
       </head>
       <body>
         ${importScript}

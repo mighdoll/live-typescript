@@ -5,3 +5,7 @@
   height: 300px;
   width: 300px;
 }
+iframe {
+  border: 0;
+  margin: 10px;
+}
