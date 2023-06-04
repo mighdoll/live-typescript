@@ -1,5 +1,6 @@
 import React from "react";
 import { CodeEditor } from "./CodeExample.js";
+import { installStoneberryTypes } from "./StoneberryMonacoTypes.js";
 
 const exampleCode = `
   import { bufferI32 } from "thimbleberry";
@@ -18,10 +19,8 @@ const exampleCode = `
 
     renderTable({ source: srcData, "inclusive scan": inclusiveScan });
   }
-
-
 `;
 
 export function App(): JSX.Element {
-  return <CodeEditor code={exampleCode}/>;
+  return <CodeEditor setupTypes={installStoneberryTypes} code={exampleCode}/>;
 }

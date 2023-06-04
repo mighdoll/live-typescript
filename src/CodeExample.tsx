@@ -3,8 +3,9 @@ import * as monaco_editor from "monaco-editor";
 import { useCallback, useEffect, useState } from "react";
 import { transpile } from "./Transpile.js";
 import "./codeExample.css";
-import { installStoneberryTypes } from "./StoneberryMonacoTypes.js";
 import { importMapScript } from "./Imports.js";
+
+type SetupMonaco = (monaco: typeof monaco_editor) => void;
 
 loader.config({
   paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.38.0/min/vs" },
@@ -14,9 +15,10 @@ interface CodeEditorProps {
   height?: number | string;
   width?: number | string;
   code?: string;
+  setupTypes: SetupMonaco;
 }
 
-const defaults: CodeEditorProps = {
+const defaults: Partial<CodeEditorProps> = {
   height: "400px",
   width: "700px",
   code: "// hello world",
@@ -24,7 +26,7 @@ const defaults: CodeEditorProps = {
 
 export function CodeEditor(props: CodeEditorProps): JSX.Element {
   const monaco = useMonaco();
-  const { height, width, code } = { ...defaults, ...props };
+  const { height, width, code, setupTypes } = { ...defaults, ...props };
   const [compiledCode, setCompiledCode] = useState(transpile(code!));
 
   const options: monaco_editor.editor.IStandaloneEditorConstructionOptions = {
@@ -36,7 +38,7 @@ export function CodeEditor(props: CodeEditorProps): JSX.Element {
 
   useEffect(() => {
     if (monaco) {
-      installStoneberryTypes(monaco);
+      setupTypes(monaco);
     }
   }, [monaco]);
 
