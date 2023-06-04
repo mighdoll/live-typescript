@@ -8,6 +8,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "stoneberry": "file:../stoneberry",
+    "stoneberry-examples": "^0.1.0",
     "sucrase": "^3.32.0",
     "thimbleberry": "^0.1.10"
   },

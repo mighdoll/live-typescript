@@ -1,7 +1,7 @@
 import webgpuTypes from "/node_modules/@webgpu/types/dist/index.d.ts?raw";
 import webgpuPackage from "/node_modules/@webgpu/types/package.json?raw";
 import stoneberryPackage from "/node_modules/stoneberry/package.json?raw";
-import exampleUtilsTs from "/node_modules/stoneberry/packages/examples/src/exampleUtils.ts?raw";
+import examplesPackage from "/node_modules/stoneberry-examples/package.json?raw";
 import thimbleberryPackage from "/node_modules/thimbleberry/package.json?raw";
 import * as monaco_editor from "monaco-editor";
 type Monaco = typeof monaco_editor;
@@ -19,6 +19,11 @@ const stoneberryTypes = import.meta.glob("/node_modules/stoneberry/**/*.d.ts", {
   eager: true,
 });
 
+const examplesTypes = import.meta.glob("/node_modules/stoneberry-examples/**/*.d.ts", {
+  as: "raw",
+  eager: true,
+});
+
 export function installStoneberryTypes(monaco: Monaco): void {
   monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
     types: ["@webgpu/types"],
@@ -31,11 +36,11 @@ export function installStoneberryTypes(monaco: Monaco): void {
 
   addLocalTsLib(monaco, thimbleberryPackage, `thimbleberry/package.json`);
   addLocalTsLib(monaco, stoneberryPackage, `stoneberry/package.json`);
+  addLocalTsLib(monaco, examplesPackage, `stoneberry-examples/package.json`);
 
   addTypes(monaco, thimbleberryTypes);
   addTypes(monaco, stoneberryTypes);
-
-  addLocalTsLib(monaco, exampleUtilsTs, `./exampleUtils.ts`);
+  addTypes(monaco, examplesTypes);
 
   monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true);
 }

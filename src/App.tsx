@@ -4,7 +4,7 @@ import { CodeEditor } from "./CodeExample.js";
 const exampleCode = `
   import { bufferI32 } from "thimbleberry";
   import { PrefixScan } from "stoneberry/scan";
-  import { renderTable, withGpuDevice } from "stoneberry/examples";
+  import { renderTable, withGpuDevice } from "stoneberry-examples";
 
   withGpuDevice(main);
   console.log("hello world");

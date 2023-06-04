@@ -1,10 +1,10 @@
 import Editor, { loader, useMonaco } from "@monaco-editor/react";
 import * as monaco_editor from "monaco-editor";
 import { useCallback, useEffect, useState } from "react";
-import { stoneberryImportScript } from "./StoneberryImports.js";
 import { transpile } from "./Transpile.js";
 import "./codeExample.css";
 import { installStoneberryTypes } from "./StoneberryMonacoTypes.js";
+import { importMapScript } from "./Imports.js";
 
 loader.config({
   paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.38.0/min/vs" },
@@ -49,7 +49,7 @@ export function CodeEditor(props: CodeEditorProps): JSX.Element {
     [setCompiledCode]
   );
 
-  const importScript = stoneberryImportScript();
+  const importScript = importMapScript(["thimbleberry", "stoneberry/scan", "stoneberry-examples"])
 
   const html = `
     <html>

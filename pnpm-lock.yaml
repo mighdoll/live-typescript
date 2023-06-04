@@ -19,6 +19,9 @@ dependencies:
   stoneberry:
     specifier: file:../stoneberry
     version: file:../stoneberry
+  stoneberry-examples:
+    specifier: ^0.1.0
+    version: 0.1.0
   sucrase:
     specifier: ^3.32.0
     version: 3.32.0
@@ -1707,6 +1710,21 @@ packages:
 
   /state-local@1.0.7:
     resolution: {integrity: sha512-HTEHMNieakEnoe33shBYcZ7NX83ACUjCu8c40iOGEZsngj9zRnkqS9j1pqQPXwobB0ZcVTk27REb7COQ0UR59w==}
+    dev: false
+
+  /stoneberry-examples@0.1.0:
+    resolution: {integrity: sha512-vCOseWL0FqmsJSlK3jcJ4+t6Ebsec+OP83sU8uo5wVkwGZWsgxgUSCc8+chDriF6lSFDiMZEs2e1h6TuPrzw3w==}
+    dependencies:
+      stoneberry: 0.1.4
+      thimbleberry: 0.1.10
+    dev: false
+
+  /stoneberry@0.1.4:
+    resolution: {integrity: sha512-nTzHZYq62CUyMvIZq7b8c00e+AyJ2rlR/8RD9p/Fzg+mhJB+TUdJ6yxFDh+LXYIzXDkbt1Y8pb9aiQpI1CIXMA==}
+    dependencies:
+      '@reactively/core': 0.0.8
+      '@reactively/decorate': 0.0.4
+      thimbleberry: 0.1.10
     dev: false
 
   /strip-ansi@6.0.1:
