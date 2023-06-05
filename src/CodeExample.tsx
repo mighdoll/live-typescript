@@ -27,7 +27,7 @@ const defaults: Partial<CodeEditorProps> = {
   packages: []
 };
 
-export function CodeEditor(props: CodeEditorProps): JSX.Element {
+export function CodeExample(props: CodeEditorProps): JSX.Element {
   const monaco = useMonaco();
   const { height, width, code, packages, setupTypes } = { ...defaults, ...props };
   const [compiledCode, setCompiledCode] = useState(transpile(code!));
