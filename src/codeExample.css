@@ -1,11 +1,17 @@
 .codeContainer {
   display: flex;
+  border-width: 1px;
+  border-color: lightgray;
+  border-style: solid;
 }
 .codeExample {
-  height: 300px;
-  width: 300px;
+  height: 400px;
+  width: 400px;
 }
 iframe {
-  border: 0;
-  margin: 10px;
+  border-width: 0 0 0 1px;
+  border-color: lightgray;
+  border-style: solid;
+  padding: 10px;
+  margin-left: 5px
 }
