@@ -2,8 +2,9 @@ import Editor, { loader, useMonaco } from "@monaco-editor/react";
 import * as monaco_editor from "monaco-editor";
 import { useCallback, useEffect, useState } from "react";
 import { transpile } from "./Transpile.js";
-import "./codeExample.css";
 import { importMapScript } from "./Imports.js";
+import "./codeExample.css";
+
 
 type SetupMonaco = (monaco: typeof monaco_editor) => void;
 
