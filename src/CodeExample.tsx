@@ -37,7 +37,8 @@ export function CodeExample(props: CodeEditorProps): JSX.Element {
     readOnly: false,
     minimap: { enabled: false },
     lineNumbers: "off",
-    fontSize: 16,
+    fontSize: 14,
+    fontFamily: "'Source Code Pro', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace"
   };
 
   useEffect(() => {
@@ -63,7 +64,7 @@ export function CodeExample(props: CodeEditorProps): JSX.Element {
       <style type="text/css">
         body {
           font-family: sans-serif;
-          font-size: 18px;
+          font-size: 16px;
         }
       </style>
       </head>
@@ -79,11 +80,10 @@ export function CodeExample(props: CodeEditorProps): JSX.Element {
   return (
     <div className="codeContainer">
       <Editor
-        {...{ height, width }}
+        {...{ height, width, options }}
         defaultLanguage="typescript"
         defaultValue={code}
         defaultPath="file:///index.ts"
-        options={options}
         onChange={codeChange}
         theme="vs-light"
       />
