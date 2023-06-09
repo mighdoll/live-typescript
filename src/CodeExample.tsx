@@ -10,7 +10,7 @@ type SetupMonaco = (monaco: typeof monaco_editor) => void;
 
 // default loader is a bit out of date, update to latest available
 loader.config({
-  paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.38.0/min/vs" },
+  paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.39.0/min/vs" },
 });
 
 interface CodeEditorProps {

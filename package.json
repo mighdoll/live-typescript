@@ -3,17 +3,16 @@
   "version": "0.0.1",
   "dependencies": {
     "@monaco-editor/react": "^4.5.1",
-    "monaco-editor": "^0.38.0",
+    "monaco-editor": "^0.39.0",
     "sucrase": "^3.32.0"
   },
   "scripts": {
-    "dev": "vite",
     "prepublish": "rimraf dist && pnpm run build && pnpm run build:types",
     "build": "vite build",
     "build:types": "tsc --project tsconfig.build.json"
   },
   "peerDependencies": {
-    "react": "^17.0.2"
+    "react": "^18.2.0"
   },
   "type": "module",
   "main": "dist/CodeExample.js",
@@ -31,10 +30,10 @@
     }
   },
   "devDependencies": {
-    "@types/react": "^18.2.8",
+    "@types/react": "^18.2.9",
     "@types/react-dom": "^18.2.4",
-    "@typescript-eslint/eslint-plugin": "^5.59.8",
-    "@typescript-eslint/parser": "^5.59.8",
+    "@typescript-eslint/eslint-plugin": "^5.59.9",
+    "@typescript-eslint/parser": "^5.59.9",
     "@vitejs/plugin-react": "^4.0.0",
     "eslint": "^8.42.0",
     "eslint-plugin-react-hooks": "^4.6.0",
