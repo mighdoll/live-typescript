@@ -1,7 +1,7 @@
 A simple react component for showing code samples with type aware editing and live preview.
 
-* Editor has full TypesScript hinting and error checking, based on VS Code's Monaco editor.
-* Code samples in vanilla typescript. Add any libraries you like.
+* TypesScript hinting and error checking, based on VS Code's Monaco editor.
+* Not tied to React. Code samples are vanilla typescript. Add any libraries you like.
 * Live preview, isolated in an iframe.
 * Instant refresh, transpiles with sucrase.
 * Docusaurus compatible.
