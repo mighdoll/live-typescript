@@ -3,6 +3,7 @@
   border-width: 1px;
   border-color: lightgray;
   border-style: solid;
+  justify-content: center;
 }
 .codeExample {
   height: 400px;
