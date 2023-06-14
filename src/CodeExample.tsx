@@ -5,7 +5,6 @@ import { transpile } from "./Transpile.js";
 import { importMapScript } from "./Imports.js";
 import "./codeExample.css";
 
-
 type SetupMonaco = (monaco: typeof monaco_editor) => void;
 
 // default loader is a bit out of date, update to latest available
@@ -19,6 +18,7 @@ interface CodeEditorProps {
   width?: number | string;
   code?: string;
   packages?: string[];
+  className?: string;
 }
 
 const defaults: Partial<CodeEditorProps> = {
@@ -30,7 +30,10 @@ const defaults: Partial<CodeEditorProps> = {
 
 export function CodeExample(props: CodeEditorProps): JSX.Element {
   const monaco = useMonaco();
-  const { height, width, code, packages, setupTypes } = { ...defaults, ...props };
+  const { height, width, code, packages, setupTypes, className } = {
+    ...defaults,
+    ...props,
+  };
   const [compiledCode, setCompiledCode] = useState(transpile(code!));
 
   const options: monaco_editor.editor.IStandaloneEditorConstructionOptions = {
@@ -61,7 +64,8 @@ export function CodeExample(props: CodeEditorProps): JSX.Element {
     [setCompiledCode]
   );
 
-  const importScript = packages ? importMapScript(packages) : ""
+  const importScript = packages ? importMapScript(packages) : "";
+  const containerClasses = `codeContainer ${className || ""}`.trim();
 
   const html = `
     <html>
@@ -83,8 +87,9 @@ export function CodeExample(props: CodeEditorProps): JSX.Element {
   `;
 
   return (
-    <div className="codeContainer">
+    <div className={containerClasses}>
       <Editor
+        wrapperProps={{ className: "codeEditor" }}
         {...{ height, width, options }}
         defaultLanguage="typescript"
         defaultValue={code}
