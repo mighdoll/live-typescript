@@ -22,10 +22,10 @@ interface CodeEditorProps {
 }
 
 const defaults: Partial<CodeEditorProps> = {
-  height: "400px",
-  width: "700px",
+  height: "unset",
+  width: "unset",
   code: "// hello world",
-  packages: []
+  packages: [],
 };
 
 export function CodeExample(props: CodeEditorProps): JSX.Element {

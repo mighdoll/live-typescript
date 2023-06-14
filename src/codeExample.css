@@ -5,6 +5,11 @@
   border-style: solid;
   justify-content: center;
 }
+.codeEditor {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
 .codeExample {
   height: 400px;
   width: 400px;
