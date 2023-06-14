@@ -38,7 +38,12 @@ export function CodeExample(props: CodeEditorProps): JSX.Element {
     minimap: { enabled: false },
     lineNumbers: "off",
     fontSize: 14,
-    fontFamily: "'Source Code Pro', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace"
+    fontFamily:
+      "'Source Code Pro', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace",
+    glyphMargin: false,
+    folding: false,
+    lineDecorationsWidth: 0,
+    lineNumbersMinChars: 0,
   };
 
   useEffect(() => {
