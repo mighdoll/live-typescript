@@ -1,6 +1,6 @@
 import "react";
 import { CodeExample } from "live-typescript";
-import { installStoneberryTypes } from "./StoneberryMonacoTypes.ts";
+import { installStoneberryTypes } from "./ThimbleberryMonacoTypes.ts";
 import "live-typescript/style.css";
 // import thimbleberry from "thimbleberry?imports";
 
