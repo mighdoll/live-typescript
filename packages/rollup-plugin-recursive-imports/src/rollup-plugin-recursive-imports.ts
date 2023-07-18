@@ -98,19 +98,16 @@ async function recursiveImports(
   }
 
   // merge our module with modules imported by our module
-  const result = nested.reduce(
-    (elem, sum) => {
-      warnDuplicates(elem, sum, pkg);
-      return { ...elem, ...sum };
-    }, 
-    pkgContents
-  );
+  const result = nested.reduce((elem, sum) => {
+    warnDuplicates(elem, sum, pkg);
+    return { ...elem, ...sum };
+  }, pkgContents);
   return result;
 }
 
 /** warn if the user imports two different versions of a package.
- * 
- * We don't currently handle this situation. 
+ *
+ * We don't currently handle this situation.
  * (LATER, rewrite the source code to import from "pkg-1" and from "pkg-2"
  * to distinguish the two versions.)
  */
@@ -139,7 +136,7 @@ async function loadModule(pkgUrl: URL): Promise<ModuleContents> {
 
   const parsed = await parseImports(contents);
   const mods = [...parsed].filter(
-    (imported) => imported.moduleSpecifier.type === "package"
+    ({ moduleSpecifier: { type } }) => type === "package" || type === "relative"
   );
   const imports = mods.map((imported) => imported.moduleSpecifier.value!);
 
