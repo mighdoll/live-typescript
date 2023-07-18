@@ -1,0 +1,21 @@
+{
+  "name": "rollup-plugin-recursive-imports",
+  "type": "module",
+  "version": "0.1.0",
+  "exports": "./dist/rollup-plugin-recursive-imports.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.2",
+    "@types/node": "^20.4.2",
+    "rimraf": "^5.0.1",
+    "rollup": "^3.26.2",
+    "tslib": "^2.6.0",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "import-meta-resolve": "^3.0.0",
+    "parse-imports": "^1.1.2"
+  }
+}

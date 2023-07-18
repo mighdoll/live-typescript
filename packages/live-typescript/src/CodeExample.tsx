@@ -18,6 +18,7 @@ interface CodeEditorProps {
   width?: number | string;
   code?: string;
   packages?: string[];
+  embeddedPackages?: Record<string, string>;
   className?: string;
 }
 
@@ -26,14 +27,14 @@ const defaults: Partial<CodeEditorProps> = {
   width: "unset",
   code: "// hello world",
   packages: [],
+  embeddedPackages: {},
 };
 
 export function CodeExample(props: CodeEditorProps): JSX.Element {
   const monaco = useMonaco();
-  const { height, width, code, packages, setupTypes, className } = {
-    ...defaults,
-    ...props,
-  };
+  const settings = { ...defaults, ...props };
+  const { setupTypes, height, width, code } = settings;
+  const { packages, embeddedPackages, className } = settings;
   const [compiledCode, setCompiledCode] = useState(transpile(code!));
 
   const options: monaco_editor.editor.IStandaloneEditorConstructionOptions = {
@@ -64,7 +65,7 @@ export function CodeExample(props: CodeEditorProps): JSX.Element {
     [setCompiledCode]
   );
 
-  const importScript = packages ? importMapScript(packages) : "";
+  const importScript = importMapScript(packages!, embeddedPackages);
   const containerClasses = `codeContainer ${className || ""}`.trim();
 
   const html = `
