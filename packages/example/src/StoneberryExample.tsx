@@ -12,7 +12,7 @@ export interface StoneberryCodeExampleProps {
 export function StoneberryExample(
   props: StoneberryCodeExampleProps
 ): JSX.Element {
-  const packages = ["stoneberry/scan", "stoneberry-examples"];
+  const packages = ["thimbleberry"];
   const embeddedPackages = thimbleberry;
   console.log("embeddedPackages", embeddedPackages);
   const { code, className } = props;
