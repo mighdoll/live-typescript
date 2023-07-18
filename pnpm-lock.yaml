@@ -10,6 +10,15 @@ importers:
 
   packages/example:
     dependencies:
+      '@webgpu/types':
+        specifier: ^0.1.34
+        version: 0.1.34
+      live-typescript:
+        specifier: workspace:*
+        version: link:../live-typescript
+      monaco-editor:
+        specifier: ^0.39.0
+        version: 0.39.0
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -19,6 +28,12 @@ importers:
       rollup:
         specifier: ^3.26.2
         version: 3.26.3
+      stoneberry:
+        specifier: ^0.1.13
+        version: 0.1.13
+      stoneberry-examples:
+        specifier: ^0.1.5
+        version: 0.1.5
       thimbleberry:
         specifier: ^0.1.14
         version: 0.1.14
@@ -53,6 +68,9 @@ importers:
       rimraf:
         specifier: ^5.0.1
         version: 5.0.1
+      rollup-plugin-recursive-imports:
+        specifier: workspace:*
+        version: link:../rollup-plugin-recursive-imports
       tslib:
         specifier: ^2.6.0
         version: 2.6.0
@@ -1324,6 +1342,10 @@ packages:
       - supports-color
     dev: true
 
+  /@webgpu/types@0.1.34:
+    resolution: {integrity: sha512-9mXtH+CC8q+Ku7Z+1XazNIte81FvfdXwR2lLRO7Ykzjd/hh1J1krJa0gtnkF1kvP11psUmKEPKo7iMTeEcUpNA==}
+    dev: false
+
   /acorn-jsx@5.3.2(acorn@8.10.0):
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
     peerDependencies:
@@ -2487,6 +2509,21 @@ packages:
 
   /state-local@1.0.7:
     resolution: {integrity: sha512-HTEHMNieakEnoe33shBYcZ7NX83ACUjCu8c40iOGEZsngj9zRnkqS9j1pqQPXwobB0ZcVTk27REb7COQ0UR59w==}
+    dev: false
+
+  /stoneberry-examples@0.1.5:
+    resolution: {integrity: sha512-7t04wI7xmkO9WTzQCUnrIm2ZtzYP8kPz7f5yDD1KcpXompayFkynSqKOCVwfWJ1sFalBUlOuMAnRWarTGPu0LQ==}
+    dependencies:
+      stoneberry: 0.1.13
+      thimbleberry: 0.1.14
+    dev: false
+
+  /stoneberry@0.1.13:
+    resolution: {integrity: sha512-FGq5Eug9lh7ErDsS3s6S+inGhPMRshylzpVcr6SxExB2laK2k3BAcb7PCLq3A8Wn4uGGG3y0fJ4MZlonsocxWA==}
+    dependencies:
+      '@reactively/core': 0.0.8
+      '@reactively/decorate': 0.0.4
+      thimbleberry: 0.1.14
     dev: false
 
   /string-width@4.2.3:
