@@ -1,9 +1,9 @@
-import recursiveImports from "../plugin/dist/rollup-plugin-recursive-imports.js";
+import recursiveImports from "rollup-plugin-recursive-imports";
 
 import typescript from "@rollup/plugin-typescript";
 
 export default {
-  input: "example.ts",
+  input: "src/example.ts",
   output: {
     file: "dist/example.js",
     format: "esm",

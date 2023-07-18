@@ -1,0 +1,18 @@
+{
+  "name": "rollup-test",
+  "type": "module",
+  "scripts": {
+    "build:plugin": "pnpm --filter 'rollup-plugin*' build",
+    "build:rollup": "rollup -c",
+    "build": "pnpm build:plugin && pnpm build:rollup"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.2",
+    "@types/node": "^20.4.2",
+    "rollup": "^3.26.2",
+    "rollup-plugin-recursive-imports": "workspace:*"
+  },
+  "dependencies": {
+    "thimbleberry": "^0.1.14"
+  }
+}
