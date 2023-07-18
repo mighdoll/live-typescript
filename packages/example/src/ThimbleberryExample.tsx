@@ -1,16 +1,16 @@
 import "react";
 import { CodeExample } from "live-typescript";
-import { installStoneberryTypes } from "./ThimbleberryMonacoTypes.ts";
+import { installThimbleberryTypes } from "./ThimbleberryMonacoTypes.ts";
 import "live-typescript/style.css";
 // import thimbleberry from "thimbleberry?imports";
 
-export interface StoneberryCodeExampleProps {
+export interface ThimbleberryCodeExampleProps {
   code: string;
   className?: string;
 }
 
-export function StoneberryExample(
-  props: StoneberryCodeExampleProps
+export function ThimbleberryExample(
+  props: ThimbleberryCodeExampleProps
 ): JSX.Element {
   const packages = ["thimbleberry"];
   // const embeddedPackages = thimbleberry;
@@ -19,7 +19,7 @@ export function StoneberryExample(
   return (
     <CodeExample
       {...{ packages, code, className }}
-      setupTypes={installStoneberryTypes}
+      setupTypes={installThimbleberryTypes}
     ></CodeExample>
   );
 }

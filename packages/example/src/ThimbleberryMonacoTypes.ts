@@ -13,7 +13,7 @@ const thimbleberryTypes = import.meta.glob(
 );
 
 
-export function installStoneberryTypes(monaco: Monaco): void {
+export function installThimbleberryTypes(monaco: Monaco): void {
   monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
     types: ["@webgpu/types"],
     moduleResolution: 100 as any, // "bundler"
