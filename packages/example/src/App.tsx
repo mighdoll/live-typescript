@@ -4,14 +4,11 @@ import { StoneberryExample } from "../src/StoneberryExample";
 import "live-typescript/style.css";
 
 export function App(): JSX.Element {
-  const code = `
-example(); 
-
-${example.toString()}
-  `;
+  const codeLines = example.toString().split("\n");
+  const code = codeLines.slice(1, codeLines.length - 1).join("\n");
   return <StoneberryExample {...{ code }} />;
 }
 
 function example(): void {
-  document.body.innerHTML = `<div> hello world</div>`;
+  document.body.innerHTML = `<div> hello world!</div>`;
 }

@@ -4,7 +4,6 @@ import { App } from './App.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    hello world
     <App />
   </React.StrictMode>,
 )
