@@ -126,6 +126,9 @@ importers:
 
   packages/rollup-plugin-recursive-imports:
     dependencies:
+      blueimp-md5:
+        specifier: ^2.19.0
+        version: 2.19.0
       import-meta-resolve:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1431,6 +1434,10 @@ packages:
     resolution: {integrity: sha512-dvMvyvY3BY4N2ftV41RMS/b8DjAmC9TLiwVyfb07j6yMzbC8w2rdWJoXscyV+IyC6+kCmQaKDZmqk7yqc+VbKg==}
     dependencies:
       lodash: 4.17.21
+    dev: false
+
+  /blueimp-md5@2.19.0:
+    resolution: {integrity: sha512-DRQrD6gJyy8FbiE4s+bDoXS9hiW3Vbx5uCdwvcCf3zLHL+Iv7LtGHLpr+GZV8rHG8tK766FGYBwRbu8pELTt+w==}
     dev: false
 
   /brace-expansion@1.1.11:
