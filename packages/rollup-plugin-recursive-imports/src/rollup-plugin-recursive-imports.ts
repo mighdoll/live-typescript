@@ -5,6 +5,7 @@ import module from "node:module";
 import path from "node:path";
 import parseImports from "parse-imports";
 import { CustomPluginOptions, LoadResult, ResolveIdResult } from "rollup";
+import md5 from "blueimp-md5";
 
 /*
 Use this plugin to generate import maps for packages imported with the suffix ?importMap.
@@ -21,7 +22,7 @@ By using the map, the vite/rollup user can use code modules statically in the br
 without bundling or publishing to a service like esm.sh. This is useful for live code editors
 like live-typescript.
   . works with code modules that are not published to npm
-  . avoids needing to rebundle the entire app when code examples are changed.
+  . avoids needing to rebundle when code examples are changed.
 
 The package names are modified to include a unique id. The modified package name is returned 
 as the record key and the modified packaged name is also patched into the import statement in
@@ -34,7 +35,12 @@ like:
 can't be scoped correctly in an import map from a blob or data url. 
 Secondly, multiple versions of the same package to be imported in the same app if necessary.
 
-Note that the top level package itself, 'my-package' in this case, is not suffixed with a unique id.
+For imports of bare specifiers, the map will have two entries to the same code
+. one with the original package name as specifier
+. one with the mod-hash as specifier
+This is so that user entered packages imports statements will work w/o patching the import statement.
+(In the unlikely case where there are multiple versions of the package that the user wants to manually
+import, the user would have to use the mod-hash specifier to choose a particular one..)
 */
 
 let rootUrl = new URL("file:///");
@@ -135,7 +141,6 @@ export async function recursiveImports(
   return result;
 }
 
-
 interface ModuleContents {
   contents: string;
   imports: string[];
@@ -166,6 +171,25 @@ export async function loadModule(pkgUrl: URL): Promise<ModuleContents> {
   return { contents, imports };
 }
 
+export function modHash(pkg: string, contents: string): string {
+  const hash = md5(contents);
+  const lastSlash = pkg.lastIndexOf("/");
+  const afterPath = pkg.slice(lastSlash + 1);
+  const shortName = trimNonAlphaNumeric(afterPath);
+  const shortHash = hash.slice(0, 7);
+  return `${shortName}-${shortHash}`;
+}
+
+function trimNonAlphaNumeric(s: string): string {
+  let i = 0;
+  for (; i < s.length; i++) {
+    if (s[i].match(/[^\w\.-]/)) {
+      break;
+    }
+  }
+  return s.slice(0, i);
+}
+
 /** @return the local fs path for a given package name */
 export function resolveModule(pkg: string, baseUrl: URL): URL {
   // use import-meta-resolve if possible,
@@ -182,7 +206,7 @@ export function resolveModule(pkg: string, baseUrl: URL): URL {
   return new URL(`file://${pkgPath}`);
 }
 
-function replaceStrings(
+export function replaceStrings(
   contents: string,
   replacements: Record<string, string>
 ): string {

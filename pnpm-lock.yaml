@@ -139,6 +139,9 @@ importers:
       '@rollup/plugin-typescript':
         specifier: ^11.1.2
         version: 11.1.2(rollup@3.26.3)(tslib@2.6.0)(typescript@5.1.6)
+      '@types/blueimp-md5':
+        specifier: ^2.18.0
+        version: 2.18.0
       '@types/node':
         specifier: ^20.4.2
         version: 20.4.2
@@ -1032,6 +1035,10 @@ packages:
 
   /@sinclair/typebox@0.27.8:
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
+    dev: true
+
+  /@types/blueimp-md5@2.18.0:
+    resolution: {integrity: sha512-f4A+++lGZGJvVSgeyMkqA7BEf2BVQli6F+qEykKb49c5ieWQBkfpn6CP5c1IZr2Yi2Ofl6Fj+v0e1fN18Z8Cnw==}
     dev: true
 
   /@types/chai-subset@1.3.3:
