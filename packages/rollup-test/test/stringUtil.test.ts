@@ -1,24 +1,9 @@
-import { test, assert, expect } from "vitest";
 import {
   PatchSpot,
-  loadModule,
   modHash,
   replaceStrings,
-  resolveModule,
 } from "rollup-plugin-recursive-imports";
-import url from "node:url";
-import path from "node:path";
-
-test("simple", async () => {
-  assert(1 + 1 === 2);
-  console.log("foo");
-  const rootPath = path.join(process.env.PWD!, "package.json");
-  const rootUrl = url.pathToFileURL(rootPath);
-
-  const thimbUrl = resolveModule("thimbleberry", rootUrl);
-  const res = await loadModule(thimbUrl);
-  console.log(JSON.stringify(res, null, 2).slice(0, 100));
-});
+import { expect, test } from "vitest";
 
 test("modHash bare import", () => {
   const id = modHash("foo", "x");
@@ -49,8 +34,7 @@ test("string patch ", () => {
   expect(result).toBe(`import { foo } from "bar-1234";`);
 });
 
-
-test("string patch multiple out of orser", () => {
+test("string patch multiple out of order", () => {
   const src = `import { foo } from "bar"; import { zip } from "zap";}`;
   const code1 = `"bar"`;
   const start1 = src.indexOf(code1);
@@ -69,5 +53,7 @@ test("string patch multiple out of orser", () => {
     newText: `"zap-3145"`,
   };
   const result = replaceStrings(src, [patch2, patch1]);
-  expect(result).toBe(`import { foo } from "bar-1234"; import { zip } from "zap-3145";}`);
+  expect(result).toBe(
+    `import { foo } from "bar-1234"; import { zip } from "zap-3145";}`
+  );
 });
