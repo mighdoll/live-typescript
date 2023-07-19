@@ -157,12 +157,9 @@ export async function loadModule(pkgUrl: URL): Promise<ModuleContents> {
       isConstant && (type === "package" || type === "relative")
   );
   const imports = mods.map((imported) => imported.moduleSpecifier.value!);
-  mods.forEach((mod) => {
-    const { startIndex, endIndex } = mod;
-    const text = contents.slice(startIndex, endIndex);
-    console.log("code:", mod.moduleSpecifier.code);
-    console.log("value:", mod.moduleSpecifier.value);
-    console.log("contents:", text);
+  const patches = mods.forEach((mod) => {
+    const { startIndex, endIndex, moduleSpecifier } = mod;
+    return { startIndex, endIndex, origText: moduleSpecifier.code };
   });
 
   return { contents, imports };
