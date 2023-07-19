@@ -19,16 +19,16 @@ function trimNonAlphaNumeric(s: string): string {
   return s.slice(0, i);
 }
 
-export interface PatchSpot {
+export interface StringPatch {
+  newText: string;
   startIndex: number;
   endIndex: number;
   origText: string;
-  newText: string;
 }
 
 export function replaceStrings(
   contents: string,
-  patchSpots: PatchSpot[]
+  patchSpots: StringPatch[]
 ): string {
   let i = 0;
   const fragments: string[] = [];
@@ -36,7 +36,7 @@ export function replaceStrings(
   for (const patch of sortedSpots) {
     fragments.push(contents.slice(i, patch.startIndex));
     fragments.push(patch.newText);
-    i = patch.endIndex; 
+    i = patch.endIndex;
   }
   fragments.push(contents.slice(i));
   return fragments.join("");

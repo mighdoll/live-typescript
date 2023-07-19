@@ -1,5 +1,5 @@
 import {
-  PatchSpot,
+  StringPatch,
   modHash,
   replaceStrings,
 } from "rollup-plugin-recursive-imports";
@@ -24,7 +24,7 @@ test("string patch ", () => {
   const src = `import { foo } from "bar";`;
   const code = `"bar"`;
   const startIndex = src.indexOf(code);
-  const patch: PatchSpot = {
+  const patch: StringPatch = {
     startIndex,
     endIndex: startIndex + code.length,
     origText: code,
@@ -38,7 +38,7 @@ test("string patch multiple out of order", () => {
   const src = `import { foo } from "bar"; import { zip } from "zap";}`;
   const code1 = `"bar"`;
   const start1 = src.indexOf(code1);
-  const patch1: PatchSpot = {
+  const patch1: StringPatch = {
     startIndex: start1,
     endIndex: start1 + code1.length,
     origText: code1,
@@ -46,7 +46,7 @@ test("string patch multiple out of order", () => {
   };
   const code2 = `"zap"`;
   const start2 = src.indexOf(code2);
-  const patch2: PatchSpot = {
+  const patch2: StringPatch = {
     startIndex: start2,
     endIndex: start2 + code1.length,
     origText: code2,
