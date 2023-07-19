@@ -6,6 +6,37 @@ import path from "node:path";
 import parseImports from "parse-imports";
 import { CustomPluginOptions, LoadResult, ResolveIdResult } from "rollup";
 
+/*
+Use this plugin to generate import maps for packages imported with the suffix ?importMap.
+
+  import map from "my-package?importMap";
+
+map will be set to a record of module specifiers to the module code, including recursively
+all the modules referenced by imports.
+
+The intent is that the returned record can be used as an import map in the browser, 
+with the code text in blob or data urls, and the modified package names as keys. 
+
+By using the map, the vite/rollup user can use code modules statically in the browser, 
+without bundling or publishing to a service like esm.sh. This is useful for live code editors
+like live-typescript.
+  . works with code modules that are not published to npm
+  . avoids needing to rebundle the entire app when code examples are changed.
+
+The package names are modified to include a unique id. The modified package name is returned 
+as the record key and the modified packaged name is also patched into the import statement in
+the returned code. 
+
+The unique-ification of packages names solves two problems. Firstly, it enables relative imports
+to to work correctly, even when the source of the import is in a blob or data url. (relative imports
+like: 
+  import foo from "./utils.js" 
+can't be scoped correctly in an import map from a blob or data url. 
+Secondly, multiple versions of the same package to be imported in the same app if necessary.
+
+Note that the top level package itself, 'my-package' in this case, is not suffixed with a unique id.
+*/
+
 let rootUrl = new URL("file:///");
 
 const importConditions = new Set(["node", "import"]);
@@ -99,46 +130,38 @@ async function recursiveImports(
 
   // merge our module with modules imported by our module
   const result = nested.reduce((elem, sum) => {
-    warnDuplicates(elem, sum, pkg);
     return { ...elem, ...sum };
   }, pkgContents);
   return result;
 }
 
-/** warn if the user imports two different versions of a package.
- *
- * We don't currently handle this situation.
- * (LATER, rewrite the source code to import from "pkg-1" and from "pkg-2"
- * to distinguish the two versions.)
- */
-function warnDuplicates(
-  a: Record<string, string>,
-  b: Record<string, string>,
-  outerPkg: string
-): void {
-  for (const pkg of Object.keys(a)) {
-    if (pkg in b && a[pkg] !== b[pkg]) {
-      console.warn(
-        `package ${outerPkg} imports two different versions of ${pkg}`
-      );
-    }
-  }
-}
 
 interface ModuleContents {
   contents: string;
   imports: string[];
 }
 
-/** load the code for a given module, and parse the code for static imports of other packages */
+let id = 0;
+
+/** load the code for a given module and replace all imports with constructed identifiers,
+ * @return the code, the
+ *  */
 async function loadModule(pkgUrl: URL): Promise<ModuleContents> {
   const contents = await fs.readFile(pkgUrl, { encoding: "utf-8" });
 
   const parsed = await parseImports(contents);
   const mods = [...parsed].filter(
-    ({ moduleSpecifier: { type } }) => type === "package" || type === "relative"
+    ({ moduleSpecifier: { type, isConstant } }) =>
+      isConstant && (type === "package" || type === "relative")
   );
   const imports = mods.map((imported) => imported.moduleSpecifier.value!);
+  mods.forEach((mod) => {
+    const { startIndex, endIndex } = mod;
+    const text = contents.slice(startIndex, endIndex);
+    console.log("code:", mod.moduleSpecifier.code);
+    console.log("value:", mod.moduleSpecifier.value);
+    console.log("contents:", text);
+  });
 
   return { contents, imports };
 }
@@ -157,4 +180,13 @@ function resolveModule(pkg: string, baseUrl: URL): URL {
   const req = module.createRequire(baseUrl.href);
   const pkgPath = req.resolve(pkg);
   return new URL(`file://${pkgPath}`);
+}
+
+function replaceStrings(
+  contents: string,
+  replacements: Record<string, string>
+): string {
+  const keys = Object.keys(replacements);
+  const pattern = new RegExp(keys.join("|"), "g");
+  return contents.replace(pattern, (matched) => replacements[matched]);
 }
