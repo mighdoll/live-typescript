@@ -12,9 +12,7 @@ export interface ThimbleberryCodeExampleProps {
 export function ThimbleberryExample(
   props: ThimbleberryCodeExampleProps
 ): JSX.Element {
-  // const packages = ["thimbleberry"];
   const embeddedPackages = thimbleberry;
-  console.log("embeddedPackages", embeddedPackages);
   const { code, className } = props;
   return (
     <CodeExample
