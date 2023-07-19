@@ -106,7 +106,7 @@ async function load(id: string): Promise<LoadResult> {
 /** load code for this package, the child packages imported by this package,
  * the grandchild packages imported by the child packages, etc.
  */
-async function recursiveImports(
+export async function recursiveImports(
   pkg: string,
   baseUrl: URL,
   found: Set<string>
@@ -146,7 +146,7 @@ let id = 0;
 /** load the code for a given module and replace all imports with constructed identifiers,
  * @return the code, the
  *  */
-async function loadModule(pkgUrl: URL): Promise<ModuleContents> {
+export async function loadModule(pkgUrl: URL): Promise<ModuleContents> {
   const contents = await fs.readFile(pkgUrl, { encoding: "utf-8" });
 
   const parsed = await parseImports(contents);
@@ -167,7 +167,7 @@ async function loadModule(pkgUrl: URL): Promise<ModuleContents> {
 }
 
 /** @return the local fs path for a given package name */
-function resolveModule(pkg: string, baseUrl: URL): URL {
+export function resolveModule(pkg: string, baseUrl: URL): URL {
   // use import-meta-resolve if possible,
   // so that we can match the exported 'import' entry in package.json packages rather than 'require'
   try {

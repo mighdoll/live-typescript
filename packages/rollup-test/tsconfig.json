@@ -17,7 +17,11 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    "paths": {
+      "rollup-plugin-recursive-imports": ["../rollup-plugin-recursive-imports/src/rollup-plugin-recursive-imports.ts"],
+    }
   },
-  "include": ["src"]
+  "include": ["src", "test"]
 }
