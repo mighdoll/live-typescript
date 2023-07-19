@@ -5,7 +5,6 @@ import module from "node:module";
 import path from "node:path";
 import parseImports from "parse-imports";
 import { CustomPluginOptions, LoadResult, ResolveIdResult } from "rollup";
-import md5 from "blueimp-md5";
 
 /*
 Use this plugin to generate import maps for packages imported with the suffix ?importMap.
@@ -146,8 +145,6 @@ interface ModuleContents {
   imports: string[];
 }
 
-let id = 0;
-
 /** load the code for a given module and replace all imports with constructed identifiers,
  * @return the code, the
  *  */
@@ -171,25 +168,6 @@ export async function loadModule(pkgUrl: URL): Promise<ModuleContents> {
   return { contents, imports };
 }
 
-export function modHash(pkg: string, contents: string): string {
-  const hash = md5(contents);
-  const lastSlash = pkg.lastIndexOf("/");
-  const afterPath = pkg.slice(lastSlash + 1);
-  const shortName = trimNonAlphaNumeric(afterPath);
-  const shortHash = hash.slice(0, 7);
-  return `${shortName}-${shortHash}`;
-}
-
-function trimNonAlphaNumeric(s: string): string {
-  let i = 0;
-  for (; i < s.length; i++) {
-    if (s[i].match(/[^\w\.-]/)) {
-      break;
-    }
-  }
-  return s.slice(0, i);
-}
-
 /** @return the local fs path for a given package name */
 export function resolveModule(pkg: string, baseUrl: URL): URL {
   // use import-meta-resolve if possible,
@@ -204,13 +182,4 @@ export function resolveModule(pkg: string, baseUrl: URL): URL {
   const req = module.createRequire(baseUrl.href);
   const pkgPath = req.resolve(pkg);
   return new URL(`file://${pkgPath}`);
-}
-
-export function replaceStrings(
-  contents: string,
-  replacements: Record<string, string>
-): string {
-  const keys = Object.keys(replacements);
-  const pattern = new RegExp(keys.join("|"), "g");
-  return contents.replace(pattern, (matched) => replacements[matched]);
 }

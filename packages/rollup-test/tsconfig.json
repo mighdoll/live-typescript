@@ -20,7 +20,7 @@
     "noFallthroughCasesInSwitch": true,
 
     "paths": {
-      "rollup-plugin-recursive-imports": ["../rollup-plugin-recursive-imports/src/rollup-plugin-recursive-imports.ts"],
+      "rollup-plugin-recursive-imports": ["../rollup-plugin-recursive-imports/src/index.ts"],
     }
   },
   "include": ["src", "test"]

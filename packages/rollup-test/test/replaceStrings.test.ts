@@ -1,5 +1,9 @@
 import { test, assert, expect } from "vitest";
-import { loadModule, modHash, resolveModule } from "rollup-plugin-recursive-imports";
+import {
+  loadModule,
+  modHash,
+  resolveModule,
+} from "rollup-plugin-recursive-imports";
 import url from "node:url";
 import path from "node:path";
 
@@ -17,14 +21,14 @@ test("simple", async () => {
 test("modHash bare import", () => {
   const id = modHash("foo", "x");
   expect(id).toBe("foo-9dd4e46");
-})
+});
 
 test("modHash relative import", () => {
   const id = modHash("./foo.js", "x");
   expect(id).toBe("foo.js-9dd4e46");
-})
+});
 
 test("modHash drop query", () => {
   const id = modHash("https://foo.js?x=y", "x");
   expect(id).toBe("foo.js-9dd4e46");
-})
+});

@@ -2,8 +2,8 @@
   "name": "rollup-plugin-recursive-imports",
   "type": "module",
   "version": "0.1.0",
-  "exports": "./dist/rollup-plugin-recursive-imports.js",
-  "types": "./dist/rollup-plugin-recursive-imports.d.ts",
+  "exports": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "build:rollup": "rollup -c rollup.config.js"
