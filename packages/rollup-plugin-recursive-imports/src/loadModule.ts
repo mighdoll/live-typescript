@@ -14,7 +14,6 @@ export function resolveModule(pkg: string, baseUrl: URL): URL {
   // exported 'import:' entry in package.json packages rather than using the 'require:' entry
   try {
     const pkgUrl = moduleResolve(pkg, baseUrl, importConditions);
-    console.log(`resolved ${pkg} to ${pkgUrl.href} using import-meta-resolve`);
     return pkgUrl;
   } catch (e) {}
 

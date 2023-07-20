@@ -25,10 +25,8 @@ export async function loadAndPatch(
     pkgUrl
   );
 
-  console.log(`adding uniqified ${pkg}: ${hashId} to map`);
   const entries: [string, string][] = [[hashId, patchedContents]];
   if (isBareSpecifier(pkg)) {
-    console.log(`adding bare import ${pkg} to map`);
     entries.push([pkg, patchedContents]);
   }
   const map = Object.fromEntries(entries);

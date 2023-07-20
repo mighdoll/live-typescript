@@ -1,10 +1,7 @@
-import * as esbuild from "esbuild";
 import path from "node:path";
 import url from "node:url";
-import parseImports from "parse-imports";
 import { CustomPluginOptions, LoadResult, ResolveIdResult } from "rollup";
-import { StringPatch, isBareSpecifier, replaceStrings } from "./stringUtil.js";
-import { cachedLoadModule, resolveModule } from "./loadModule.js";
+import { resolveModule } from "./loadModule.js";
 import { loadAndPatch } from "./patchModule.js";
 
 /*
@@ -101,7 +98,6 @@ function resolveId(
 async function load(id: string): Promise<LoadResult> {
   if (id.endsWith(suffix)) {
     const pkg = id.slice(0, -suffix.length);
-    console.log("load", pkg, "from", rootUrl.href);
     const results = await recursiveImports(pkg, rootUrl, new Set());
     const resultsStr = JSON.stringify(results, null, 2);
 
@@ -122,7 +118,6 @@ export async function recursiveImports(
   baseUrl: URL,
   found: Set<string>
 ): Promise<Record<string, string>> {
-  console.log("recursiveImports", pkg, "from", baseUrl.href);
   const pkgUrl = resolveModule(pkg, baseUrl);
   if (found.has(pkgUrl.href)) {
     return {};
@@ -136,7 +131,6 @@ export async function recursiveImports(
   // recurse to collect imports from this package
   const childMaps: Record<string, string>[] = [];
   for (const importPkg of imports) {
-    console.log("recursing to import", importPkg, "from", pkg);
     const results = await recursiveImports(importPkg, pkgUrl, found);
     childMaps.push(results);
   }
