@@ -16,7 +16,7 @@ import {
 /*
 Use this plugin to generate import maps for packages imported with the suffix ?importMap.
 
-  import map from "my-package?importMap";
+  import map from "my-package?remapImports";
 
 map will be set to a record of module specifiers to the module code, including recursively
 all the modules referenced by imports.

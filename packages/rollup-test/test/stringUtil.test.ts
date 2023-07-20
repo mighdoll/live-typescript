@@ -1,5 +1,6 @@
 import {
   StringPatch,
+  isBareSpecifier,
   modHash,
   replaceStrings,
 } from "rollup-plugin-recursive-imports";
@@ -25,7 +26,9 @@ test("modHash @reactively/core", () => {
   expect(id).toBe("@reactively/core-9dd4e46");
 });
 
-
+test("isBareSpecifier stoneberry/scan", () => {
+  expect(isBareSpecifier("stoneberry/scan")).toBe(true);
+});
 
 test("string patch ", () => {
   const src = `import { foo } from "bar";`;
