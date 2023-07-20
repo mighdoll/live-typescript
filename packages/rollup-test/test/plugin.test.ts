@@ -1,20 +1,19 @@
 import path from "node:path";
 import url from "node:url";
 import {
-  loadModule,
   recursiveImports,
   resolveModule,
 } from "rollup-plugin-recursive-imports";
-import { assert, expect, test } from "vitest";
+import { expect, test } from "vitest";
 
-test("loadModule", async () => {
-  const rootPath = path.join(process.env.PWD!, "package.json");
-  const rootUrl = url.pathToFileURL(rootPath);
+// test("loadModule", async () => {
+//   const rootPath = path.join(process.env.PWD!, "package.json");
+//   const rootUrl = url.pathToFileURL(rootPath);
 
-  const thimbUrl = resolveModule("thimbleberry", rootUrl);
-  const res = await loadModule(thimbUrl);
-  // console.log(res.imports)
-});
+//   const thimbUrl = resolveModule("thimbleberry", rootUrl);
+//   const res = await loadModule(thimbUrl);
+//   // console.log(res.imports)
+// });
 
 test.only("recursive", async () => {
   const rootPath = path.join(process.env.PWD!, "package.json");
@@ -30,4 +29,5 @@ test.only("recursive", async () => {
   // const lines = map["thimbleberry"].split("\n");
   // const imports = lines.filter((l) => l.includes("import"));
   // console.log(imports);
+  console.log(Object.keys(map));
 });

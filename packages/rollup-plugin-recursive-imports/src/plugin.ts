@@ -119,9 +119,10 @@ interface ModuleText {
   hashId: string;
 }
 
+/** cache from href to loaded code and hashId */
 const moduleCache = new Map<string, ModuleText>();
 
-async function cachedReadModule(
+async function cachedLoadModule(
   url: URL,
   importSpecifier: string
 ): Promise<ModuleText> {
@@ -137,8 +138,12 @@ async function cachedReadModule(
   return result;
 }
 
-/** load code for this package, the child packages imported by this package,
- * the grandchild packages imported by the child packages, etc.
+/**
+ * Load and link code for this package and all recursively imported packages.
+ * The import statements in the loaded code is patched to import via uniqified
+ * ids for each module.
+ *
+ * @returns a map with the uniqified ids and bare imports as keys and the code as values.
  */
 export async function recursiveImports(
   pkg: string,
@@ -152,26 +157,22 @@ export async function recursiveImports(
     found.add(pkgUrl.href);
   }
 
-  // load code and imports from this package
-  const { contents, imports } = await loadModule(pkgUrl);
+  // load code and child imports from this package
+  const { contents, hashId } = await cachedLoadModule(pkgUrl, pkg);
+  const imports = await parseModule(contents);
   const patchedContents = await patchImports(contents, imports, pkgUrl);
-  const hashId = modHash(pkg, patchedContents);
 
-  const entries: [string, string][] = [[pkg, patchedContents]];
+  const entries: [string, string][] = [[hashId, patchedContents]];
   if (isBareSpecifier(pkg)) {
-    entries.push([hashId, patchedContents]);
+    entries.push([pkg, patchedContents]);
   }
 
-  // // recurse to collect imports from this package
-  // const nested: Record<string, string>[] = [];
-  // for (const imported of imports) {
-  //   nested.push(await recursiveImports(imported, pkgUrl, found));
-  // }
+  // recurse to collect imports from this package
+  for (const imported of imports) {
+    const results = await recursiveImports(imported.specifier, pkgUrl, found);
+    entries.push(...Object.entries(results));
+  }
 
-  // // merge our module with modules imported by our module
-  // const map = nested.reduce((elem, sum) => {
-  //   return { ...elem, ...sum };
-  // }, pkgContents);
   return Object.fromEntries(entries);
 }
 
@@ -185,7 +186,7 @@ async function patchImports(
   for (const imported of imports) {
     const { specifier } = imported;
     const childUrl = resolveModule(specifier, baseUrl);
-    const { hashId } = await cachedReadModule(childUrl, specifier);
+    const { hashId } = await cachedLoadModule(childUrl, specifier);
     const patch = makePatch(contents, imported, hashId);
     patches.push(patch);
   }
@@ -205,11 +206,6 @@ function makePatch(
   return { startIndex, endIndex, origText, newText };
 }
 
-interface ModuleContents {
-  contents: string;
-  imports: ImportLocation[];
-}
-
 interface ImportLocation {
   lineStart: number;
   lineEnd: number;
@@ -220,9 +216,8 @@ interface ImportLocation {
 /** load the code for a given module and return
  *  the code, the imported module specifieres and the text locations of the import statements
  */
-export async function loadModule(pkgUrl: URL): Promise<ModuleContents> {
-  const contents = await fs.readFile(pkgUrl, { encoding: "utf-8" });
 
+async function parseModule(contents: string): Promise<ImportLocation[]> {
   const parsed = await parseImports(contents);
   const mods = [...parsed].filter(
     ({ moduleSpecifier: { type, isConstant } }) =>
@@ -238,7 +233,7 @@ export async function loadModule(pkgUrl: URL): Promise<ModuleContents> {
     };
   });
 
-  return { contents, imports };
+  return imports;
 }
 
 /** @return the local fs path for a given package name */
