@@ -163,6 +163,9 @@ importers:
 
   packages/rollup-test:
     dependencies:
+      stoneberry:
+        specifier: ^0.1.13
+        version: 0.1.13
       thimbleberry:
         specifier: ^0.1.15
         version: 0.1.15
@@ -2718,6 +2721,14 @@ packages:
   /std-env@3.3.3:
     resolution: {integrity: sha512-Rz6yejtVyWnVjC1RFvNmYL10kgjC49EOghxWn0RFqlCHGFpQx+Xe7yW3I4ceK1SGrWIGMjD5Kbue8W/udkbMJg==}
     dev: true
+
+  /stoneberry@0.1.13:
+    resolution: {integrity: sha512-FGq5Eug9lh7ErDsS3s6S+inGhPMRshylzpVcr6SxExB2laK2k3BAcb7PCLq3A8Wn4uGGG3y0fJ4MZlonsocxWA==}
+    dependencies:
+      '@reactively/core': 0.0.8
+      '@reactively/decorate': 0.0.4
+      thimbleberry: 0.1.15
+    dev: false
 
   /string-width@4.2.3:
     resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}

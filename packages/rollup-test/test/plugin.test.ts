@@ -12,15 +12,35 @@ test("load and patch thimbleberry", async () => {
   const rootUrl = url.pathToFileURL(rootPath);
 
   const pkg = "thimbleberry";
-  const thimbUrl = resolveModule(pkg, rootUrl);
-  const { map } = await loadModule(thimbUrl, pkg);
+  const pkgUrl = resolveModule(pkg, rootUrl);
+  const { map } = await loadModule(pkgUrl, pkg);
 
-  // map contains thimbleberry bare reference map entry
+  // map contains package bare reference map entry
   const keys = Object.keys(map);
-  expect(keys).toContain("thimbleberry");
+  expect(keys).toContain(pkg);
 
-  // map contains thimbleberry uniqified map entry
-  const hashedKeys = keys.filter((k) => k.startsWith("thimbleberry-"));
+  // map contains package uniqified map entry
+  const hashedKeys = keys.filter((k) => k.startsWith(pkg + "-"));
+  expect(hashedKeys.length).toBeGreaterThan(0);
+
+  // internal imports are uniqified
+  verifyImportHashIds(map);
+});
+
+test("load and patch stoneberry/scan", async () => {
+  const rootPath = path.join(process.env.PWD!, "package.json");
+  const rootUrl = url.pathToFileURL(rootPath);
+
+  const pkg = "stoneberry/scan";
+  const pkgUrl = resolveModule(pkg, rootUrl);
+  const { map } = await loadModule(pkgUrl, pkg);
+
+  // map contains package bare reference map entry
+  const keys = Object.keys(map);
+  expect(keys).toContain(pkg);
+
+  // map contains package uniqified map entry
+  const hashedKeys = keys.filter((k) => k.startsWith(pkg + "-"));
   expect(hashedKeys.length).toBeGreaterThan(0);
 
   // internal imports are uniqified
