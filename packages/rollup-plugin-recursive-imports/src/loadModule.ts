@@ -4,7 +4,7 @@ import module from "node:module";
 import { modHash } from "./stringUtil.js";
 
 /** cache from href to loaded code and hashId */
-const moduleCache = new Map<string, ModuleText>();
+const moduleCache = new Map<string, LoadedModule>();
 
 const importConditions = new Set(["node", "import"]);
 
@@ -28,16 +28,16 @@ export function resolveModule(pkg: string, baseUrl: URL): URL {
   return new URL(`file://${pkgPath}`);
 }
 
-export interface ModuleText {
+export interface LoadedModule {
   contents: string;
   hashId: string;
 }
 
-/** load a local module from the filesystem, caching the results */
+/** load a local module from the filesystem, returning and caching the results */
 export async function cachedLoadModule(
   url: URL,
   importSpecifier: string
-): Promise<ModuleText> {
+): Promise<LoadedModule> {
   const found = moduleCache.get(url.href);
   if (found) {
     return found;
@@ -45,7 +45,7 @@ export async function cachedLoadModule(
 
   const contents = await fs.readFile(url, { encoding: "utf-8" });
   const hashId = modHash(importSpecifier, contents);
-  const result: ModuleText = { contents, hashId };
+  const result: LoadedModule = { contents, hashId };
   moduleCache.set(url.href, result);
   return result;
 }
