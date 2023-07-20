@@ -1,12 +1,11 @@
-
 import path from "node:path";
 import url from "node:url";
 import {
   loadModule,
   recursiveImports,
-  resolveModule
+  resolveModule,
 } from "rollup-plugin-recursive-imports";
-import { assert, test } from "vitest";
+import { assert, expect, test } from "vitest";
 
 test("loadModule", async () => {
   const rootPath = path.join(process.env.PWD!, "package.json");
@@ -17,11 +16,18 @@ test("loadModule", async () => {
   // console.log(res.imports)
 });
 
-test("recursive", async () => {
+test.only("recursive", async () => {
   const rootPath = path.join(process.env.PWD!, "package.json");
   const rootUrl = url.pathToFileURL(rootPath);
 
   const map = await recursiveImports("thimbleberry", rootUrl, new Set());
-  console.log(Object.keys(map))
-  console.log(Object.keys(map))
+
+  const keys = Object.keys(map);
+  expect(keys).toContain("thimbleberry");
+  const hashedKeys = keys.filter((k) => k.startsWith("thimbleberry-"));
+  expect(hashedKeys.length).toBeGreaterThan(0);
+
+  // const lines = map["thimbleberry"].split("\n");
+  // const imports = lines.filter((l) => l.includes("import"));
+  // console.log(imports);
 });

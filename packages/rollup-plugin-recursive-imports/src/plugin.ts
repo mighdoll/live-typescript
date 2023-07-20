@@ -5,7 +5,12 @@ import path from "node:path";
 import url from "node:url";
 import parseImports from "parse-imports";
 import { CustomPluginOptions, LoadResult, ResolveIdResult } from "rollup";
-import { modHash } from "./stringUtil.js";
+import {
+  StringPatch,
+  isBareSpecifier,
+  modHash,
+  replaceStrings,
+} from "./stringUtil.js";
 
 /*
 Use this plugin to generate import maps for packages imported with the suffix ?importMap.
@@ -111,7 +116,7 @@ async function load(id: string): Promise<LoadResult> {
 
 interface ModuleText {
   contents: string;
-  hash: string;
+  hashId: string;
 }
 
 const moduleCache = new Map<string, ModuleText>();
@@ -122,13 +127,12 @@ async function cachedReadModule(
 ): Promise<ModuleText> {
   const found = moduleCache.get(url.href);
   if (found) {
-    console.log("found in cache", url.href);
     return found;
   }
+
   const contents = await fs.readFile(url, { encoding: "utf-8" });
-  const hash = modHash(importSpecifier, contents);
-  console.log("hash", importSpecifier, hash);
-  const result = { contents, hash };
+  const hashId = modHash(importSpecifier, contents);
+  const result: ModuleText = { contents, hashId };
   moduleCache.set(url.href, result);
   return result;
 }
@@ -150,14 +154,13 @@ export async function recursiveImports(
 
   // load code and imports from this package
   const { contents, imports } = await loadModule(pkgUrl);
-  for (const imported of imports) {
-    const { importSpecifier: childPkg } = imported;
-    const childUrl = resolveModule(childPkg, pkgUrl);
-    const { contents, hash } = await cachedReadModule(childUrl, childPkg);
-    console.log(hash);
-  }
+  const patchedContents = await patchImports(contents, imports, pkgUrl);
+  const hashId = modHash(pkg, patchedContents);
 
-  const pkgContents = { [pkg]: contents };
+  const entries: [string, string][] = [[pkg, patchedContents]];
+  if (isBareSpecifier(pkg)) {
+    entries.push([hashId, patchedContents]);
+  }
 
   // // recurse to collect imports from this package
   // const nested: Record<string, string>[] = [];
@@ -169,18 +172,48 @@ export async function recursiveImports(
   // const map = nested.reduce((elem, sum) => {
   //   return { ...elem, ...sum };
   // }, pkgContents);
-  return pkgContents;
+  return Object.fromEntries(entries);
+}
+
+async function patchImports(
+  contents: string,
+  imports: ImportLocation[],
+  baseUrl: URL
+): Promise<string> {
+  // load child packages
+  const patches: StringPatch[] = [];
+  for (const imported of imports) {
+    const { specifier } = imported;
+    const childUrl = resolveModule(specifier, baseUrl);
+    const { hashId } = await cachedReadModule(childUrl, specifier);
+    const patch = makePatch(contents, imported, hashId);
+    patches.push(patch);
+  }
+  return replaceStrings(contents, patches);
+}
+
+function makePatch(
+  contents: string,
+  src: ImportLocation,
+  hashId: string
+): StringPatch {
+  const { lineStart, origText } = src;
+
+  const startIndex = contents.indexOf(origText, lineStart);
+  const endIndex = startIndex + origText.length;
+  const newText = `"${hashId}"`;
+  return { startIndex, endIndex, origText, newText };
 }
 
 interface ModuleContents {
   contents: string;
-  imports: LoadInfo[];
+  imports: ImportLocation[];
 }
 
-interface LoadInfo {
+interface ImportLocation {
   lineStart: number;
   lineEnd: number;
-  importSpecifier: string;
+  specifier: string;
   origText: string;
 }
 
@@ -201,7 +234,7 @@ export async function loadModule(pkgUrl: URL): Promise<ModuleContents> {
       lineStart: startIndex,
       lineEnd: endIndex,
       origText: moduleSpecifier.code,
-      importSpecifier: moduleSpecifier.value!,
+      specifier: moduleSpecifier.value!,
     };
   });
 
