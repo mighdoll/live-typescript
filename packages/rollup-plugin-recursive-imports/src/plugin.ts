@@ -1,10 +1,11 @@
 import fs from "fs/promises";
 import { moduleResolve } from "import-meta-resolve";
-import url from "node:url";
 import module from "node:module";
 import path from "node:path";
+import url from "node:url";
 import parseImports from "parse-imports";
 import { CustomPluginOptions, LoadResult, ResolveIdResult } from "rollup";
+import { modHash } from "./stringUtil.js";
 
 /*
 Use this plugin to generate import maps for packages imported with the suffix ?importMap.
@@ -52,7 +53,7 @@ const suffix = "?imports";
 /** @param cwd - absolute file system path to start the search for packages.
  * Typically this is the directory containing package.json and node_modules.
  */
-export default function main(cwd: string) {
+export default function plugin(cwd: string) {
   const rootPath = path.join(cwd, "package.json");
   rootUrl = url.pathToFileURL(rootPath);
 
@@ -108,6 +109,30 @@ async function load(id: string): Promise<LoadResult> {
   return null;
 }
 
+interface ModuleText {
+  contents: string;
+  hash: string;
+}
+
+const moduleCache = new Map<string, ModuleText>();
+
+async function cachedReadModule(
+  url: URL,
+  importSpecifier: string
+): Promise<ModuleText> {
+  const found = moduleCache.get(url.href);
+  if (found) {
+    console.log("found in cache", url.href);
+    return found;
+  }
+  const contents = await fs.readFile(url, { encoding: "utf-8" });
+  const hash = modHash(importSpecifier, contents);
+  console.log("hash", importSpecifier, hash);
+  const result = { contents, hash };
+  moduleCache.set(url.href, result);
+  return result;
+}
+
 /** load code for this package, the child packages imported by this package,
  * the grandchild packages imported by the child packages, etc.
  */
@@ -125,29 +150,43 @@ export async function recursiveImports(
 
   // load code and imports from this package
   const { contents, imports } = await loadModule(pkgUrl);
-  const pkgContents = { [pkg]: contents };
-
-  // recurse to collect imports from this package
-  const nested: Record<string, string>[] = [];
   for (const imported of imports) {
-    nested.push(await recursiveImports(imported, pkgUrl, found));
+    const { importSpecifier: childPkg } = imported;
+    const childUrl = resolveModule(childPkg, pkgUrl);
+    const { contents, hash } = await cachedReadModule(childUrl, childPkg);
+    console.log(hash);
   }
 
-  // merge our module with modules imported by our module
-  const result = nested.reduce((elem, sum) => {
-    return { ...elem, ...sum };
-  }, pkgContents);
-  return result;
+  const pkgContents = { [pkg]: contents };
+
+  // // recurse to collect imports from this package
+  // const nested: Record<string, string>[] = [];
+  // for (const imported of imports) {
+  //   nested.push(await recursiveImports(imported, pkgUrl, found));
+  // }
+
+  // // merge our module with modules imported by our module
+  // const map = nested.reduce((elem, sum) => {
+  //   return { ...elem, ...sum };
+  // }, pkgContents);
+  return pkgContents;
 }
 
 interface ModuleContents {
   contents: string;
-  imports: string[];
+  imports: LoadInfo[];
 }
 
-/** load the code for a given module and replace all imports with constructed identifiers,
- * @return the code, the
- *  */
+interface LoadInfo {
+  lineStart: number;
+  lineEnd: number;
+  importSpecifier: string;
+  origText: string;
+}
+
+/** load the code for a given module and return
+ *  the code, the imported module specifieres and the text locations of the import statements
+ */
 export async function loadModule(pkgUrl: URL): Promise<ModuleContents> {
   const contents = await fs.readFile(pkgUrl, { encoding: "utf-8" });
 
@@ -156,10 +195,14 @@ export async function loadModule(pkgUrl: URL): Promise<ModuleContents> {
     ({ moduleSpecifier: { type, isConstant } }) =>
       isConstant && (type === "package" || type === "relative")
   );
-  const imports = mods.map((imported) => imported.moduleSpecifier.value!);
-  const patches = mods.forEach((mod) => {
+  const imports = mods.map((mod) => {
     const { startIndex, endIndex, moduleSpecifier } = mod;
-    return { startIndex, endIndex, origText: moduleSpecifier.code };
+    return {
+      lineStart: startIndex,
+      lineEnd: endIndex,
+      origText: moduleSpecifier.code,
+      importSpecifier: moduleSpecifier.value!,
+    };
   });
 
   return { contents, imports };
