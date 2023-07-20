@@ -25,10 +25,10 @@
   "dependencies": {
     "@webgpu/types": "^0.1.34",
     "live-typescript": "workspace:*",
-    "monaco-editor": "^0.39.0",
+    "monaco-editor": "^0.40.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "rollup": "^3.26.2",
-    "thimbleberry": "^0.1.14"
+    "rollup": "^3.26.3",
+    "thimbleberry": "^0.1.15"
   }
 }

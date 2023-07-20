@@ -1,4 +1,5 @@
 import fs from "fs/promises";
+import * as esbuild from "esbuild";
 import { moduleResolve } from "import-meta-resolve";
 import module from "node:module";
 import path from "node:path";
@@ -185,8 +186,16 @@ export async function loadModule(
 ): Promise<LoadedModule> {
   // load code and child imports from this package
   const { contents, hashId } = await cachedLoadModule(pkgUrl, pkg);
-  const importLocations = await parseModule(contents);
-  const patchedContents = await patchImports(contents, importLocations, pkgUrl);
+  const transformed = await esbuild.transform(contents, {
+    format: "esm",
+    target: "es2022",
+  });
+  const importLocations = await parseModule(transformed.code);
+  const patchedContents = await patchImports(
+    transformed.code,
+    importLocations,
+    pkgUrl
+  );
 
   const entries: [string, string][] = [[hashId, patchedContents]];
   if (isBareSpecifier(pkg)) {

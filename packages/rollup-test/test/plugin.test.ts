@@ -5,9 +5,9 @@ import {
   recursiveImports,
   resolveModule,
 } from "rollup-plugin-recursive-imports";
-import { expect, test } from "vitest";
+import { assert, expect, test } from "vitest";
 
-test.only("load and patch thimbleberry", async () => {
+test("load and patch thimbleberry", async () => {
   const rootPath = path.join(process.env.PWD!, "package.json");
   const rootUrl = url.pathToFileURL(rootPath);
 
@@ -15,11 +15,11 @@ test.only("load and patch thimbleberry", async () => {
   const thimbUrl = resolveModule(pkg, rootUrl);
   const {map} = await loadModule(thimbUrl, pkg);
 
-  // map contains thimbleberry bare reference
+  // map contains thimbleberry bare reference map entry
   const keys = Object.keys(map);
   expect(keys).toContain("thimbleberry");
 
-  // map contains thimbleberry uniqified reference
+  // map contains thimbleberry uniqified map entry
   const hashedKeys = keys.filter((k) => k.startsWith("thimbleberry-"));
   expect(hashedKeys.length).toBeGreaterThan(0);
 
@@ -31,7 +31,6 @@ test.only("load and patch thimbleberry", async () => {
     const hashImport = /-[a-z0-9]{7}/.test(l);
     expect(hashImport).toBe(true);
   });
-  console.log(importLines);
 });
 
 test("recursive thimbleberry import", async () => {
@@ -42,8 +41,7 @@ test("recursive thimbleberry import", async () => {
 
   Object.entries(map).forEach(([key, value]) => {
     if (value.includes("require")) {
-      console.log(key);
+      assert.fail(`require found in ${key}`);
     }
   });
-  console.log(Object.keys(map));
 });
