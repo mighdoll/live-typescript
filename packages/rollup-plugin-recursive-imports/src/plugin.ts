@@ -158,22 +158,44 @@ export async function recursiveImports(
   }
 
   // load code and child imports from this package
+  const { map, imports } = await loadModule(pkgUrl, pkg);
+
+  // recurse to collect imports from this package
+  const childMaps: Record<string, string>[] = [];
+  for (const importPkg of imports) {
+    const results = await recursiveImports(importPkg, pkgUrl, found);
+    childMaps.push(results);
+  }
+
+  const combinedMap = childMaps.reduce(
+    (m, combined) => ({ ...m, ...combined }),
+    map
+  );
+  return combinedMap;
+}
+
+interface LoadedModule {
+  imports: string[];
+  map: Record<string, string>;
+}
+
+export async function loadModule(
+  pkgUrl: URL,
+  pkg: string
+): Promise<LoadedModule> {
+  // load code and child imports from this package
   const { contents, hashId } = await cachedLoadModule(pkgUrl, pkg);
-  const imports = await parseModule(contents);
-  const patchedContents = await patchImports(contents, imports, pkgUrl);
+  const importLocations = await parseModule(contents);
+  const patchedContents = await patchImports(contents, importLocations, pkgUrl);
 
   const entries: [string, string][] = [[hashId, patchedContents]];
   if (isBareSpecifier(pkg)) {
     entries.push([pkg, patchedContents]);
   }
+  const map = Object.fromEntries(entries);
+  const imports = importLocations.map((i) => i.specifier);
 
-  // recurse to collect imports from this package
-  for (const imported of imports) {
-    const results = await recursiveImports(imported.specifier, pkgUrl, found);
-    entries.push(...Object.entries(results));
-  }
-
-  return Object.fromEntries(entries);
+  return { map, imports };
 }
 
 async function patchImports(
