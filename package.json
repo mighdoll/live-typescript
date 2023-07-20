@@ -4,6 +4,7 @@
     "build:rollup-plugin": "pnpm --filter rollup-plugin* build",
     "build:live-typescript": "pnpm --filter live-typescript prepublish",
     "example": "pnpm --filter example dev",
-    "build:all": "pnpm build:rollup-plugin && pnpm build:live-typescript && pnpm example"
+    "build:all": "pnpm build:rollup-plugin && pnpm build:live-typescript",
+    "dev": "pnpm build:all && pnpm example"
   }
 }
