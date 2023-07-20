@@ -20,6 +20,13 @@ test("modHash drop query", () => {
   expect(id).toBe("foo.js-9dd4e46");
 });
 
+test("modHash @reactively/core", () => {
+  const id = modHash("@reactively/core", "x");
+  expect(id).toBe("@reactively/core-9dd4e46");
+});
+
+
+
 test("string patch ", () => {
   const src = `import { foo } from "bar";`;
   const code = `"bar"`;

@@ -1,22 +1,29 @@
 import md5 from "blueimp-md5";
 
-export function modHash(pkg: string, contents: string): string {
+export function modHash(moduleSpecifier: string, contents: string): string {
   const hash = md5(contents);
-  const lastSlash = pkg.lastIndexOf("/");
-  const afterPath = pkg.slice(lastSlash + 1);
-  const shortName = trimNonAlphaNumeric(afterPath);
+
+  let afterPath = moduleSpecifier;
+  const firstChar = moduleSpecifier[0];
+
+  // @ts-ignore @node/types is not up to date
+  const isUrl = URL.canParse(moduleSpecifier);
+
+  if (firstChar === "." || firstChar === "/" || isUrl) {
+    const lastSlash = moduleSpecifier.lastIndexOf("/");
+    afterPath = moduleSpecifier.slice(lastSlash + 1);
+  }
+  const shortName = trimSpecifierEnd(afterPath);
   const shortHash = hash.slice(0, 7);
   return `${shortName}-${shortHash}`;
 }
 
-function trimNonAlphaNumeric(s: string): string {
-  let i = 0;
-  for (; i < s.length; i++) {
-    if (s[i].match(/[^\w\.-]/)) {
-      break;
-    }
+function trimSpecifierEnd(s: string): string {
+  const matches = s.match(/[\w\.@\/-]+/);
+  if (matches?.length) {
+    return matches[0];
   }
-  return s.slice(0, i);
+  return "?";
 }
 
 export interface StringPatch {
