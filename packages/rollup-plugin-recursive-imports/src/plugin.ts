@@ -59,6 +59,7 @@ export default function plugin(cwd: string) {
     name: "recursive-imports",
     load,
     resolveId,
+    enforce: "pre"
   };
 }
 
