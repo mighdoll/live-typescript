@@ -3,7 +3,7 @@ import parseImports from "parse-imports";
 import { cachedLoadModule, resolveModule } from "./loadModule.js";
 import { StringPatch, isBareSpecifier, replaceStrings } from "./stringUtil.js";
 
-export interface LoadedModule {
+export interface PatchedModule {
   imports: string[];
   map: Record<string, string>;
 }
@@ -12,7 +12,7 @@ export interface LoadedModule {
 export async function loadAndPatch(
   pkgUrl: URL,
   pkg: string
-): Promise<LoadedModule> {
+): Promise<PatchedModule> {
   const { contents, hashId } = await cachedLoadModule(pkgUrl, pkg);
   const transformed = await esbuild.transform(contents, {
     format: "esm",

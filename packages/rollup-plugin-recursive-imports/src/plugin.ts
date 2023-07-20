@@ -121,6 +121,7 @@ export async function recursiveImports(
   baseUrl: URL,
   found: Set<string>
 ): Promise<Record<string, string>> {
+  console.log("recursiveImports", pkg, "from", baseUrl.href);
   const pkgUrl = resolveModule(pkg, baseUrl);
   if (found.has(pkgUrl.href)) {
     return {};
