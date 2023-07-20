@@ -4,12 +4,11 @@ export function modHash(moduleSpecifier: string, contents: string): string {
   const hash = md5(contents);
 
   let afterPath = moduleSpecifier;
-  const firstChar = moduleSpecifier[0];
-
-  // @ts-ignore @node/types is not up to date
-  const isUrl = URL.canParse(moduleSpecifier);
-
-  if (firstChar === "." || firstChar === "/" || isUrl) {
+  if (
+    isRelativeSpecifier(moduleSpecifier) ||
+    isAbsoluteSpecifier(moduleSpecifier) ||
+    isUrl(moduleSpecifier)
+  ) {
     const lastSlash = moduleSpecifier.lastIndexOf("/");
     afterPath = moduleSpecifier.slice(lastSlash + 1);
   }
@@ -47,4 +46,25 @@ export function replaceStrings(
   }
   fragments.push(contents.slice(i));
   return fragments.join("");
+}
+
+export function isBareSpecifier(specifier: string): boolean {
+  return (
+    !isRelativeSpecifier(specifier) &&
+    !isAbsoluteSpecifier(specifier) &&
+    !isUrl(specifier)
+  );
+}
+
+function isRelativeSpecifier(specifier: string): boolean {
+  return specifier.startsWith(".");
+}
+function isAbsoluteSpecifier(specifier: string): boolean {
+  return specifier.startsWith("/");
+}
+
+function isUrl(s: string): boolean {
+  // @ts-ignore @node/types is not up to date
+  const isUrl = URL.canParse(s);
+  return isUrl;
 }
