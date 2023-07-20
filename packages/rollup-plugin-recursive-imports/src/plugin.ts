@@ -1,17 +1,11 @@
-import fs from "fs/promises";
 import * as esbuild from "esbuild";
-import { moduleResolve } from "import-meta-resolve";
-import module from "node:module";
 import path from "node:path";
 import url from "node:url";
 import parseImports from "parse-imports";
 import { CustomPluginOptions, LoadResult, ResolveIdResult } from "rollup";
-import {
-  StringPatch,
-  isBareSpecifier,
-  modHash,
-  replaceStrings,
-} from "./stringUtil.js";
+import { StringPatch, isBareSpecifier, replaceStrings } from "./stringUtil.js";
+import { cachedLoadModule, resolveModule } from "./loadModule.js";
+import { loadAndPatch } from "./patchModule.js";
 
 /*
 Use this plugin to generate import maps for packages imported with the suffix ?importMap.
@@ -51,8 +45,6 @@ import, the user would have to use the mod-hash specifier to choose a particular
 
 let rootUrl = new URL("file:///");
 
-const importConditions = new Set(["node", "import"]);
-
 /** trigger on source code that imports from a package with this suffix attached */
 const suffix = "?imports";
 
@@ -70,7 +62,8 @@ export default function plugin(cwd: string) {
   };
 }
 
-/** detect imports containing our suffix so that rollup will try and load them */
+/** plugin hook to detect import specifiers containing our suffix
+ * (so that rollup will continue to try and load them) */
 function resolveId(
   source: string,
   importer: string | undefined,
@@ -107,36 +100,13 @@ function resolveId(
 async function load(id: string): Promise<LoadResult> {
   if (id.endsWith(suffix)) {
     const pkg = id.slice(0, -suffix.length);
+    console.log("load", pkg, "from", rootUrl.href);
     const results = await recursiveImports(pkg, rootUrl, new Set());
     const resultsStr = JSON.stringify(results, null, 2);
 
     return `export default ${resultsStr};`;
   }
   return null;
-}
-
-interface ModuleText {
-  contents: string;
-  hashId: string;
-}
-
-/** cache from href to loaded code and hashId */
-const moduleCache = new Map<string, ModuleText>();
-
-async function cachedLoadModule(
-  url: URL,
-  importSpecifier: string
-): Promise<ModuleText> {
-  const found = moduleCache.get(url.href);
-  if (found) {
-    return found;
-  }
-
-  const contents = await fs.readFile(url, { encoding: "utf-8" });
-  const hashId = modHash(importSpecifier, contents);
-  const result: ModuleText = { contents, hashId };
-  moduleCache.set(url.href, result);
-  return result;
 }
 
 /**
@@ -159,11 +129,12 @@ export async function recursiveImports(
   }
 
   // load code and child imports from this package
-  const { map, imports } = await loadModule(pkgUrl, pkg);
+  const { map, imports } = await loadAndPatch(pkgUrl, pkg);
 
   // recurse to collect imports from this package
   const childMaps: Record<string, string>[] = [];
   for (const importPkg of imports) {
+    console.log("recursing to import", importPkg, "from", pkg);
     const results = await recursiveImports(importPkg, pkgUrl, found);
     childMaps.push(results);
   }
@@ -173,112 +144,4 @@ export async function recursiveImports(
     map
   );
   return combinedMap;
-}
-
-interface LoadedModule {
-  imports: string[];
-  map: Record<string, string>;
-}
-
-export async function loadModule(
-  pkgUrl: URL,
-  pkg: string
-): Promise<LoadedModule> {
-  // load code and child imports from this package
-  const { contents, hashId } = await cachedLoadModule(pkgUrl, pkg);
-  const transformed = await esbuild.transform(contents, {
-    format: "esm",
-    target: "es2022",
-  });
-  const importLocations = await parseModule(transformed.code);
-  const patchedContents = await patchImports(
-    transformed.code,
-    importLocations,
-    pkgUrl
-  );
-
-  const entries: [string, string][] = [[hashId, patchedContents]];
-  if (isBareSpecifier(pkg)) {
-    entries.push([pkg, patchedContents]);
-  }
-  const map = Object.fromEntries(entries);
-  const imports = importLocations.map((i) => i.specifier);
-
-  return { map, imports };
-}
-
-async function patchImports(
-  contents: string,
-  imports: ImportLocation[],
-  baseUrl: URL
-): Promise<string> {
-  // load child packages
-  const patches: StringPatch[] = [];
-  for (const imported of imports) {
-    const { specifier } = imported;
-    const childUrl = resolveModule(specifier, baseUrl);
-    const { hashId } = await cachedLoadModule(childUrl, specifier);
-    const patch = makePatch(contents, imported, hashId);
-    patches.push(patch);
-  }
-  return replaceStrings(contents, patches);
-}
-
-function makePatch(
-  contents: string,
-  src: ImportLocation,
-  hashId: string
-): StringPatch {
-  const { lineStart, origText } = src;
-
-  const startIndex = contents.indexOf(origText, lineStart);
-  const endIndex = startIndex + origText.length;
-  const newText = `"${hashId}"`;
-  return { startIndex, endIndex, origText, newText };
-}
-
-interface ImportLocation {
-  lineStart: number;
-  lineEnd: number;
-  specifier: string;
-  origText: string;
-}
-
-/** load the code for a given module and return
- *  the code, the imported module specifieres and the text locations of the import statements
- */
-
-async function parseModule(contents: string): Promise<ImportLocation[]> {
-  const parsed = await parseImports(contents);
-  const mods = [...parsed].filter(
-    ({ moduleSpecifier: { type, isConstant } }) =>
-      isConstant && (type === "package" || type === "relative")
-  );
-  const imports = mods.map((mod) => {
-    const { startIndex, endIndex, moduleSpecifier } = mod;
-    return {
-      lineStart: startIndex,
-      lineEnd: endIndex,
-      origText: moduleSpecifier.code,
-      specifier: moduleSpecifier.value!,
-    };
-  });
-
-  return imports;
-}
-
-/** @return the local fs path for a given package name */
-export function resolveModule(pkg: string, baseUrl: URL): URL {
-  // use import-meta-resolve if possible,
-  // so that we can match the exported 'import' entry in package.json packages rather than 'require'
-  try {
-    const pkgUrl = moduleResolve(pkg, baseUrl, importConditions);
-    return pkgUrl;
-  } catch (e) {}
-
-  // but import-meta-resolve doesn't fall back to commonjs resolution for e.g. lodash,
-  // so use node's module.resolve if necessary
-  const req = module.createRequire(baseUrl.href);
-  const pkgPath = req.resolve(pkg);
-  return new URL(`file://${pkgPath}`);
 }

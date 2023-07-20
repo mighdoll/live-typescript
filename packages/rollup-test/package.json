@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "stoneberry": "^0.1.13",
+    "stoneberry-examples": "^0.1.5",
     "thimbleberry": "^0.1.15"
   }
 }

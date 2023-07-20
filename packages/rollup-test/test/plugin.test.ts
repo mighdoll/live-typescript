@@ -1,11 +1,8 @@
 import path from "node:path";
 import url from "node:url";
-import {
-  loadModule,
-  recursiveImports,
-  resolveModule,
-} from "rollup-plugin-recursive-imports";
+import { loadAndPatch, recursiveImports } from "rollup-plugin-recursive-imports";
 import { assert, expect, test } from "vitest";
+import { resolveModule } from "../../rollup-plugin-recursive-imports/src/loadModule.ts";
 
 test("load and patch thimbleberry", async () => {
   const rootPath = path.join(process.env.PWD!, "package.json");
@@ -13,7 +10,7 @@ test("load and patch thimbleberry", async () => {
 
   const pkg = "thimbleberry";
   const pkgUrl = resolveModule(pkg, rootUrl);
-  const { map } = await loadModule(pkgUrl, pkg);
+  const { map } = await loadAndPatch(pkgUrl, pkg);
 
   // map contains package bare reference map entry
   const keys = Object.keys(map);
@@ -33,7 +30,7 @@ test("load and patch stoneberry/scan", async () => {
 
   const pkg = "stoneberry/scan";
   const pkgUrl = resolveModule(pkg, rootUrl);
-  const { map } = await loadModule(pkgUrl, pkg);
+  const { map } = await loadAndPatch(pkgUrl, pkg);
 
   // map contains package bare reference map entry
   const keys = Object.keys(map);
