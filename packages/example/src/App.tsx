@@ -14,7 +14,7 @@ function example(): void {
 /** @return example function body as a string */
 function exampleCode(): string {
   const codeLines = example.toString().split("\n");
-  const codeImport = 'import {mapN} from "thimbleberry";\n';
+  const codeImport = 'import { mapN } from "thimbleberry";\n';
   const bodyLines = codeLines
     .slice(1, codeLines.length - 1)
     .map((s) => s.trim());
