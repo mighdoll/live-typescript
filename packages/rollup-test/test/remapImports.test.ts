@@ -1,8 +1,11 @@
 import path from "node:path";
 import url from "node:url";
-import { loadAndPatch, remapRecursive } from "rollup-plugin-remap-imports";
+import {
+  loadAndPatch,
+  remapRecursive,
+  resolveModule,
+} from "rollup-plugin-remap-imports";
 import { assert, expect, test } from "vitest";
-import { resolveModule } from "../../rollup-plugin-remap-imports/src/loadModule.js";
 
 test("load and patch thimbleberry", async () => {
   const rootPath = path.join(process.env.PWD!, "package.json");

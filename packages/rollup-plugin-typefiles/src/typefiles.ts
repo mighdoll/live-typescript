@@ -1,8 +1,10 @@
+import fs from "fs/promises";
 import path from "node:path";
 import url from "node:url";
 import { CustomPluginOptions, LoadResult, ResolveIdResult } from "rollup";
 import { Plugin } from "vite";
-import { resolveModule } from "rollup-plugin-remap-imports"
+import { glob } from "glob";
+import { packageResolve } from "./resolve.js";
 
 let rootUrl = new URL("file:///");
 
@@ -59,10 +61,24 @@ async function load(id: string): Promise<LoadResult> {
   return null;
 }
 
+/*
+  find the package.json for the package
+  scan for '*.d.ts' files
+*/
 export async function collectTypeFiles(
   pkg: string,
   baseUrl: URL
 ): Promise<Record<string, string>> {
-  console.log("typeFiles", pkg, baseUrl.href);
-  return {};
+  const packageJsonUrl = packageResolve(pkg, baseUrl);
+  const packageJsonPath = url.fileURLToPath(packageJsonUrl);
+  const packagePath = path.resolve(packageJsonPath, "..");
+  const typeFiles = await glob(`${packagePath}/**/*.d.ts`, { follow: true });
+  const files = [...typeFiles, packageJsonPath];
+  const fileEntries = files.map(async (f) => {
+    const contents = await fs.readFile(f, "utf-8"); 
+    return [f, contents];
+  });
+  const map = Object.fromEntries(await Promise.all(fileEntries));
+
+  return map;
 }
