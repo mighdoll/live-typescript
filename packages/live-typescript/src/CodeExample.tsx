@@ -13,7 +13,7 @@ loader.config({
 });
 
 interface CodeEditorProps {
-  setupTypes: SetupMonaco;
+  setupMonaco?: SetupMonaco;
   height?: number | string;
   width?: number | string;
   code?: string;
@@ -33,7 +33,7 @@ const defaults: Partial<CodeEditorProps> = {
 export function CodeExample(props: CodeEditorProps): JSX.Element {
   const monaco = useMonaco();
   const settings = { ...defaults, ...props };
-  const { setupTypes, height, width, code } = settings;
+  const { setupMonaco, height, width, code } = settings;
   const { packages, embeddedPackages, className } = settings;
   const [compiledCode, setCompiledCode] = useState(transpile(code!));
 
@@ -51,8 +51,8 @@ export function CodeExample(props: CodeEditorProps): JSX.Element {
   };
 
   useEffect(() => {
-    if (monaco) {
-      setupTypes(monaco);
+    if (monaco && setupMonaco) {
+      setupMonaco(monaco);
     }
   }, [monaco]);
 

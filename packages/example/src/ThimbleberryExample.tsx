@@ -6,17 +6,16 @@ import thimbleberry from "thimbleberry?remapImports";
 
 export interface ThimbleberryCodeExampleProps {
   code: string;
-  className?: string;
 }
 
 export function ThimbleberryExample(
   props: ThimbleberryCodeExampleProps
 ): JSX.Element {
+  const { code } = props;
   const embeddedPackages = thimbleberry;
-  const { code, className } = props;
   return (
     <CodeExample
-      {...{ embeddedPackages, code, className }}
+      {...{ embeddedPackages, code }}
       setupTypes={installThimbleberryTypes}
     ></CodeExample>
   );
