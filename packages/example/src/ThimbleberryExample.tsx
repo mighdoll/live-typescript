@@ -2,7 +2,7 @@ import "react";
 import { CodeExample } from "live-typescript";
 import { installThimbleberryTypes } from "./ThimbleberryMonacoTypes.ts";
 import "live-typescript/style.css";
-import thimbleberry from "thimbleberry?imports";
+import thimbleberry from "thimbleberry?remapImports";
 
 export interface ThimbleberryCodeExampleProps {
   code: string;

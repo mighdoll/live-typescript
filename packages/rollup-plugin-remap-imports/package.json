@@ -1,5 +1,5 @@
 {
-  "name": "rollup-plugin-recursive-imports",
+  "name": "rollup-plugin-remap-imports",
   "type": "module",
   "version": "0.1.0",
   "exports": "./dist/index.js",
@@ -15,7 +15,8 @@
     "rimraf": "^5.0.1",
     "rollup": "^3.26.2",
     "tslib": "^2.6.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "vite": "^4.4.5"
   },
   "dependencies": {
     "blueimp-md5": "^2.19.0",

@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import recursiveImports from "rollup-plugin-recursive-imports";
+import remapImports from "rollup-plugin-remap-imports";
 
 export default defineConfig({
-  plugins: [react(), recursiveImports(process.env.PWD)],
+  plugins: [react(), remapImports(process.env.PWD)],
 });

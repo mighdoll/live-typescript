@@ -1,4 +1,4 @@
-import recursiveImports from "rollup-plugin-recursive-imports";
+import remapImports from "rollup-plugin-remap-imports";
 
 import typescript from "@rollup/plugin-typescript";
 
@@ -9,9 +9,9 @@ export default {
     format: "esm",
   },
   plugins: [
-    recursiveImports(process.env.PWD),
     typescript({
-      compilerOptions: { target: "es2022" },
+      compilerOptions: { target: "es2022", "allowImportingTsExtensions": false},
     }),
+    remapImports(process.env.PWD),
   ],
 };

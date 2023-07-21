@@ -62,9 +62,9 @@ importers:
       rimraf:
         specifier: ^5.0.1
         version: 5.0.1
-      rollup-plugin-recursive-imports:
+      rollup-plugin-remap-imports:
         specifier: workspace:*
-        version: link:../rollup-plugin-recursive-imports
+        version: link:../rollup-plugin-remap-imports
       tslib:
         specifier: ^2.6.0
         version: 2.6.0
@@ -79,10 +79,10 @@ importers:
     dependencies:
       '@monaco-editor/react':
         specifier: ^4.5.1
-        version: 4.5.1(monaco-editor@0.39.0)(react-dom@18.2.0)(react@17.0.0)
+        version: 4.5.1(monaco-editor@0.40.0)(react-dom@18.2.0)(react@17.0.0)
       monaco-editor:
-        specifier: ^0.39.0
-        version: 0.39.0
+        specifier: ^0.40.0
+        version: 0.40.0
       react:
         specifier: '>=17'
         version: 17.0.0
@@ -124,7 +124,7 @@ importers:
         specifier: ^4.3.9
         version: 4.3.9
 
-  packages/rollup-plugin-recursive-imports:
+  packages/rollup-plugin-remap-imports:
     dependencies:
       blueimp-md5:
         specifier: ^2.19.0
@@ -160,6 +160,9 @@ importers:
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
+      vite:
+        specifier: ^4.4.5
+        version: 4.4.5(@types/node@20.4.2)
 
   packages/rollup-test:
     dependencies:
@@ -182,9 +185,9 @@ importers:
       rollup:
         specifier: ^3.26.3
         version: 3.26.3
-      rollup-plugin-recursive-imports:
+      rollup-plugin-remap-imports:
         specifier: workspace:*
-        version: link:../rollup-plugin-recursive-imports
+        version: link:../rollup-plugin-remap-imports
       vite:
         specifier: ^4.4.4
         version: 4.4.4(@types/node@20.4.2)
@@ -921,24 +924,24 @@ packages:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
 
-  /@monaco-editor/loader@1.3.3(monaco-editor@0.39.0):
+  /@monaco-editor/loader@1.3.3(monaco-editor@0.40.0):
     resolution: {integrity: sha512-6KKF4CTzcJiS8BJwtxtfyYt9shBiEv32ateQ9T4UVogwn4HM/uPo9iJd2Dmbkpz8CM6Y0PDUpjnZzCwC+eYo2Q==}
     peerDependencies:
       monaco-editor: '>= 0.21.0 < 1'
     dependencies:
-      monaco-editor: 0.39.0
+      monaco-editor: 0.40.0
       state-local: 1.0.7
     dev: false
 
-  /@monaco-editor/react@4.5.1(monaco-editor@0.39.0)(react-dom@18.2.0)(react@17.0.0):
+  /@monaco-editor/react@4.5.1(monaco-editor@0.40.0)(react-dom@18.2.0)(react@17.0.0):
     resolution: {integrity: sha512-NNDFdP+2HojtNhCkRfE6/D6ro6pBNihaOzMbGK84lNWzRu+CfBjwzGt4jmnqimLuqp5yE5viHS2vi+QOAnD5FQ==}
     peerDependencies:
       monaco-editor: '>= 0.25.0 < 1'
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@monaco-editor/loader': 1.3.3(monaco-editor@0.39.0)
-      monaco-editor: 0.39.0
+      '@monaco-editor/loader': 1.3.3(monaco-editor@0.40.0)
+      monaco-editor: 0.40.0
       react: 17.0.0
       react-dom: 18.2.0(react@17.0.0)
     dev: false
@@ -2375,10 +2378,6 @@ packages:
       ufo: 1.1.2
     dev: true
 
-  /monaco-editor@0.39.0:
-    resolution: {integrity: sha512-zhbZ2Nx93tLR8aJmL2zI1mhJpsl87HMebNBM6R8z4pLfs8pj604pIVIVwyF1TivcfNtIPpMXL+nb3DsBmE/x6Q==}
-    dev: false
-
   /monaco-editor@0.40.0:
     resolution: {integrity: sha512-1wymccLEuFSMBvCk/jT1YDW/GuxMLYwnFwF9CDyYCxoTw2Pt379J3FUhwy9c43j51JdcxVPjwk0jm0EVDsBS2g==}
     dev: false
@@ -3037,6 +3036,42 @@ packages:
 
   /vite@4.4.4(@types/node@20.4.2):
     resolution: {integrity: sha512-4mvsTxjkveWrKDJI70QmelfVqTm+ihFAb6+xf4sjEU2TmUCTlVX87tmg/QooPEMQb/lM9qGHT99ebqPziEd3wg==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': '>= 14'
+      less: '*'
+      lightningcss: ^1.21.0
+      sass: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      less:
+        optional: true
+      lightningcss:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      '@types/node': 20.4.2
+      esbuild: 0.18.14
+      postcss: 8.4.26
+      rollup: 3.26.3
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: true
+
+  /vite@4.4.5(@types/node@20.4.2):
+    resolution: {integrity: sha512-4m5kEtAWHYr0O1Fu7rZp64CfO1PsRGZlD3TAB32UmQlpd7qg15VF7ROqGN5CyqN7HFuwr7ICNM2+fDWRqFEKaA==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:

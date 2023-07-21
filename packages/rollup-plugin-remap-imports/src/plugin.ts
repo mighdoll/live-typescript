@@ -1,6 +1,7 @@
 import path from "node:path";
 import url from "node:url";
 import { CustomPluginOptions, LoadResult, ResolveIdResult } from "rollup";
+import { Plugin } from "vite";
 import { resolveModule } from "./loadModule.js";
 import { loadAndPatch } from "./patchModule.js";
 
@@ -48,7 +49,7 @@ const suffix = "?remapImports".toLowerCase();
 /** @param cwd - absolute file system path to start the search for packages.
  * Typically this is the directory containing package.json and node_modules.
  */
-export default function plugin(cwd: string) {
+export default function plugin(cwd: string): Plugin {
   const rootPath = path.join(cwd, "package.json");
   rootUrl = url.pathToFileURL(rootPath);
 
@@ -64,8 +65,8 @@ export default function plugin(cwd: string) {
  * (so that rollup will continue to try and load them) */
 function resolveId(
   source: string,
-  importer: string | undefined,
-  options: {
+  _importer: string | undefined,
+  _options: {
     assertions: Record<string, string>;
     custom?: CustomPluginOptions;
     isEntry: boolean;

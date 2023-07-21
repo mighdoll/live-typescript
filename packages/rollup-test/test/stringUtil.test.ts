@@ -3,7 +3,7 @@ import {
   isBareSpecifier,
   modHash,
   replaceStrings,
-} from "rollup-plugin-recursive-imports";
+} from "rollup-plugin-remap-imports";
 import { expect, test } from "vitest";
 
 test("modHash bare import", () => {
