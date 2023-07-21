@@ -19,6 +19,7 @@ interface CodeEditorProps {
   code?: string;
   packages?: string[];
   embeddedPackages?: Record<string, string>;
+  typeFiles?: Record<string, string>;
   className?: string;
 }
 
@@ -28,12 +29,13 @@ const defaults: Partial<CodeEditorProps> = {
   code: "// hello world",
   packages: [],
   embeddedPackages: {},
+  typeFiles: {},
 };
 
 export function CodeExample(props: CodeEditorProps): JSX.Element {
   const monaco = useMonaco();
   const settings = { ...defaults, ...props };
-  const { setupMonaco, height, width, code } = settings;
+  const { setupMonaco, typeFiles, height, width, code } = settings;
   const { packages, embeddedPackages, className } = settings;
   const [compiledCode, setCompiledCode] = useState(transpile(code!));
 
@@ -51,10 +53,20 @@ export function CodeExample(props: CodeEditorProps): JSX.Element {
   };
 
   useEffect(() => {
-    if (monaco && setupMonaco) {
-      setupMonaco(monaco);
+    if (monaco) {
+      Object.entries(typeFiles!).forEach(([path, text]) => {
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(text, path);
+      });
+
+      monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+        moduleResolution: 100 as any, // "bundler"
+        module: monaco.languages.typescript.ModuleKind.ESNext,
+      });
+      monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true);
+
+      setupMonaco?.(monaco);
     }
-  }, [monaco]);
+  }, [monaco, typeFiles]);
 
   const codeChange = useCallback(
     (value: any) => {
