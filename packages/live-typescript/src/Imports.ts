@@ -1,3 +1,10 @@
+/**
+ * create an import map so the browser can resolve packages from import statements.
+ * Map entries for public modules are resolved from https://esm.sh.
+ * Map entries for embedded modules (with module text provided) are resolved via blob urls.
+ *
+ * @return an import map script ready for use in html
+ */
 export function importMapScript(
   publicPackages: string[],
   embeddedPackages?: Record<string, string>
@@ -23,7 +30,7 @@ export function importMapScript(
   `;
 }
 
-export function jsBlobUrl(code: string): string {
+function jsBlobUrl(code: string): string {
   const blob = new Blob([code], { type: "text/javascript" });
   const url = URL.createObjectURL(blob);
   return url;
