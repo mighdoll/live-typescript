@@ -55,5 +55,6 @@ export async function typeFiles(
   pkg: string,
   baseUrl: URL
 ): Promise<Record<string, string>> {
+  console.log("typeFiles", pkg, baseUrl.href);
   return {};
 }

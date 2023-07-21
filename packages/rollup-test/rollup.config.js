@@ -1,5 +1,5 @@
 import remapImports from "rollup-plugin-remap-imports";
-
+import typeFiles from "rollup-plugin-typefiles";
 import typescript from "@rollup/plugin-typescript";
 
 export default {
@@ -10,8 +10,9 @@ export default {
   },
   plugins: [
     typescript({
-      compilerOptions: { target: "es2022", "allowImportingTsExtensions": false},
+      compilerOptions: { target: "es2022", allowImportingTsExtensions: false },
     }),
     remapImports(process.env.PWD),
+    typeFiles(process.env.PWD),
   ],
 };

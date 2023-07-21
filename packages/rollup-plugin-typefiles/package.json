@@ -5,8 +5,8 @@
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "build:rollup": "rollup -c rollup.config.js"
+    "prepublish": "rimraf dist && pnpm build",
+    "build": "tsc"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.2",

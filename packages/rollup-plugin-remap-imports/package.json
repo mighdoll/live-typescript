@@ -5,6 +5,7 @@
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
+    "prepublish": "rimraf dist && pnpm build",
     "build": "tsc"
   },
   "devDependencies": {

@@ -2,15 +2,15 @@
   "name": "rollup-test",
   "type": "module",
   "scripts": {
-    "build:plugin": "pnpm --filter 'rollup-plugin*' build",
-    "build:rollup": "rollup -c",
-    "build": "pnpm build:plugin && pnpm build:rollup"
+    "build:plugins": "pnpm --filter rollup-plugin* prepublish",
+    "rollup:test": "pnpm build:plugins && pnpm rollup -c rollup.config.js"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.2",
     "@types/node": "^20.4.2",
     "rollup": "^3.26.3",
     "rollup-plugin-remap-imports": "workspace:*",
+    "rollup-plugin-typefiles": "workspace:*",
     "vite": "^4.4.4",
     "vite-tsconfig-paths": "^4.2.0",
     "vitest": "^0.33.0"

@@ -1,10 +1,12 @@
 {
   "name": "root",
   "scripts": {
-    "build:rollup-plugin": "pnpm --filter rollup-plugin-remap* build",
     "build:live-typescript": "pnpm --filter live-typescript prepublish",
+    "build:rollup-remap": "pnpm --filter rollup-plugin-remap* prepublish",
+    "build:rollup-typefiles": "pnpm --filter rollup-plugin-typefiles* prepublish",
+    "build:all": "pnpm build:rollup-remap && pnpm build:rollup-typefiles && pnpm build:live-typescript",
     "example": "pnpm --filter example dev",
-    "build:all": "pnpm build:rollup-plugin && pnpm build:live-typescript",
+    "rollup:test": "pnpm build:rollup-remap && pnpm build:rollup-typfiles && ",
     "dev": "pnpm build:all && pnpm example"
   }
 }

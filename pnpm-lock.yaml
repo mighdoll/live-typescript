@@ -65,6 +65,9 @@ importers:
       rollup-plugin-remap-imports:
         specifier: workspace:*
         version: link:../rollup-plugin-remap-imports
+      rollup-plugin-typefiles:
+        specifier: workspace:*
+        version: link:../rollup-plugin-typefiles
       tslib:
         specifier: ^2.6.0
         version: 2.6.0
@@ -219,6 +222,9 @@ importers:
       rollup-plugin-remap-imports:
         specifier: workspace:*
         version: link:../rollup-plugin-remap-imports
+      rollup-plugin-typefiles:
+        specifier: workspace:*
+        version: link:../rollup-plugin-typefiles
       vite:
         specifier: ^4.4.4
         version: 4.4.4(@types/node@20.4.2)
