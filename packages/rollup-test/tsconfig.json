@@ -20,7 +20,10 @@
     "noFallthroughCasesInSwitch": true,
 
     "paths": {
-      "rollup-plugin-remap-imports": ["../rollup-plugin-remap-imports/src/index.ts"],
+      "rollup-plugin-remap-imports": [
+        "../rollup-plugin-remap-imports/src/index.ts"
+      ],
+      "rollup-plugin-typefiles": ["../rollup-plugin-typefiles/src/index.ts"]
     }
   },
   "include": ["src", "test"]
