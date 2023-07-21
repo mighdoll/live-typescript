@@ -97,7 +97,7 @@ function resolveId(
  *    },
  */
 async function load(id: string): Promise<LoadResult> {
-  if (id.endsWith(suffix)) {
+  if (id.toLowerCase().endsWith(suffix)) {
     const pkg = id.slice(0, -suffix.length);
     const results = await remapRecursive(pkg, rootUrl, new Set());
     const resultsStr = JSON.stringify(results, null, 2);
