@@ -14,6 +14,8 @@ export async function loadAndPatch(
   pkg: string
 ): Promise<PatchedModule> {
   const { contents, hashId } = await cachedLoadModule(pkgUrl, pkg);
+
+  // esbuild to strip sourcemaps for now
   const transformed = await esbuild.transform(contents, {
     format: "esm",
     target: "es2022",
