@@ -49,7 +49,7 @@ const suffix = "?remapImports".toLowerCase();
 /** @param cwd - absolute file system path to start the search for packages.
  * Typically this is the directory containing package.json and node_modules.
  */
-export default function plugin(cwd: string): Plugin {
+export default function remapImports(cwd: string): Plugin {
   const rootPath = path.join(cwd, "package.json");
   rootUrl = url.pathToFileURL(rootPath);
 
