@@ -1,4 +1,4 @@
-export * from "./typefiles.js";
+export * from "./typeFiles.js";
 
-import typeFiles from "./typefiles.js";
+import typeFiles from "./typeFiles.js";
 export default typeFiles;
