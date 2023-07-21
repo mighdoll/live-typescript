@@ -7,11 +7,6 @@
     "skipLibCheck": true,
     "declaration": true,
     "rootDir": "src",
-    "paths": {
-      "rollup-plugin-remap-imports": [
-        "../rollup-plugin-remap-imports/src/index.ts"
-      ]
-    }
   },
   "include": ["src/**/*.ts"],
   "buildOptions": {
