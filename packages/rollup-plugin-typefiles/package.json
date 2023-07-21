@@ -1,15 +1,15 @@
 {
-  "name": "rollup-plugin-remap-imports",
+  "name": "rollup-plugin-typefiles",
   "type": "module",
   "version": "0.1.0",
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "build:rollup": "rollup -c rollup.config.js"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.2",
-    "@types/blueimp-md5": "^2.18.0",
     "@types/node": "^20.4.2",
     "rimraf": "^5.0.1",
     "rollup": "^3.26.2",
@@ -18,9 +18,6 @@
     "vite": "^4.4.5"
   },
   "dependencies": {
-    "blueimp-md5": "^2.19.0",
-    "esbuild": "^0.18.14",
-    "import-meta-resolve": "^3.0.0",
     "parse-imports": "^1.1.2"
   }
 }
