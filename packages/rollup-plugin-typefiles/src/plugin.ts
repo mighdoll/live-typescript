@@ -8,7 +8,14 @@ let rootUrl = new URL("file:///");
 /** trigger on source code that imports from a package with this suffix attached */
 const suffix = "?typefiles".toLowerCase();
 
-/** @param cwd - absolute file system path to start the search for packages.
+/**
+ * This plugin enables import statements with a ?typeFiles suffix that will
+ * resolve (at compile time) to a map of all type definition files in the package.
+ *
+ * This is useful for statically gathering type definitions for use in type aware
+ * live editing environments like live-typescript.
+ *
+ * @param cwd - absolute file system path to start the search for packages.
  * Typically this is the directory containing package.json and node_modules.
  */
 export default function plugin(cwd: string): Plugin {
