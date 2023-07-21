@@ -20,6 +20,7 @@ interface CodeEditorProps {
   packages?: string[];
   embeddedPackages?: Record<string, string>;
   typeFiles?: Record<string, string>;
+  visibleTypes?: string[];
   className?: string;
 }
 
@@ -30,12 +31,14 @@ const defaults: Partial<CodeEditorProps> = {
   packages: [],
   embeddedPackages: {},
   typeFiles: {},
+  visibleTypes: [],
 };
 
 export function CodeExample(props: CodeEditorProps): JSX.Element {
   const monaco = useMonaco();
   const settings = { ...defaults, ...props };
-  const { setupMonaco, typeFiles, height, width, code } = settings;
+  const { setupMonaco, typeFiles, visibleTypes, height, width, code } =
+    settings;
   const { packages, embeddedPackages, className } = settings;
   const [compiledCode, setCompiledCode] = useState(transpile(code!));
 
@@ -59,6 +62,7 @@ export function CodeExample(props: CodeEditorProps): JSX.Element {
       });
 
       monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+        types: visibleTypes,
         moduleResolution: 100 as any, // "bundler"
         module: monaco.languages.typescript.ModuleKind.ESNext,
       });
