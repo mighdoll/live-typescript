@@ -2,7 +2,7 @@ import path from "node:path";
 import url from "node:url";
 import { CustomPluginOptions, LoadResult, ResolveIdResult } from "rollup";
 import { Plugin } from "vite";
-import { resolveModule } from "../../rollup-plugin-remap-imports/src/loadModule.js"
+import { resolveModule } from "rollup-plugin-remap-imports"
 
 let rootUrl = new URL("file:///");
 
