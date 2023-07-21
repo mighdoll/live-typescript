@@ -172,6 +172,9 @@ importers:
 
   packages/rollup-plugin-typefiles:
     dependencies:
+      import-meta-resolve:
+        specifier: ^3.0.0
+        version: 3.0.0
       parse-imports:
         specifier: ^1.1.2
         version: 1.1.2

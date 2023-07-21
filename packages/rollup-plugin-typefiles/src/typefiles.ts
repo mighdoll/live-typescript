@@ -2,11 +2,12 @@ import path from "node:path";
 import url from "node:url";
 import { CustomPluginOptions, LoadResult, ResolveIdResult } from "rollup";
 import { Plugin } from "vite";
+import { resolveModule } from "../../rollup-plugin-remap-imports/src/loadModule.js"
 
 let rootUrl = new URL("file:///");
 
 /** trigger on source code that imports from a package with this suffix attached */
-const suffix = "?typefiles".toLowerCase();
+const suffix = "?typeFiles".toLowerCase();
 
 /**
  * This plugin enables import statements with a ?typeFiles suffix that will
@@ -18,7 +19,7 @@ const suffix = "?typefiles".toLowerCase();
  * @param cwd - absolute file system path to start the search for packages.
  * Typically this is the directory containing package.json and node_modules.
  */
-export default function typefiles(cwd: string): Plugin {
+export default function typeFiles(cwd: string): Plugin {
   const rootPath = path.join(cwd, "package.json");
   rootUrl = url.pathToFileURL(rootPath);
 
@@ -50,7 +51,7 @@ function resolveId(
 async function load(id: string): Promise<LoadResult> {
   if (id.toLowerCase().endsWith(suffix)) {
     const pkg = id.slice(0, -suffix.length);
-    const results = await typeFiles(pkg, rootUrl);
+    const results = await collectTypeFiles(pkg, rootUrl);
     const resultsStr = JSON.stringify(results, null, 2);
 
     return `export default ${resultsStr};`;
@@ -58,7 +59,7 @@ async function load(id: string): Promise<LoadResult> {
   return null;
 }
 
-export async function typeFiles(
+export async function collectTypeFiles(
   pkg: string,
   baseUrl: URL
 ): Promise<Record<string, string>> {
