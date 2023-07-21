@@ -98,7 +98,7 @@ function resolveId(
 async function load(id: string): Promise<LoadResult> {
   if (id.endsWith(suffix)) {
     const pkg = id.slice(0, -suffix.length);
-    const results = await recursiveImports(pkg, rootUrl, new Set());
+    const results = await remapRecursive(pkg, rootUrl, new Set());
     const resultsStr = JSON.stringify(results, null, 2);
 
     return `export default ${resultsStr};`;
@@ -113,7 +113,7 @@ async function load(id: string): Promise<LoadResult> {
  *
  * @returns a map with the uniqified ids and bare imports as keys and the code as values.
  */
-export async function recursiveImports(
+export async function remapRecursive(
   pkg: string,
   baseUrl: URL,
   found: Set<string>
@@ -131,7 +131,7 @@ export async function recursiveImports(
   // recurse to collect imports from this package
   const childMaps: Record<string, string>[] = [];
   for (const importPkg of imports) {
-    const results = await recursiveImports(importPkg, pkgUrl, found);
+    const results = await remapRecursive(importPkg, pkgUrl, found);
     childMaps.push(results);
   }
 

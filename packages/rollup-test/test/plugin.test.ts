@@ -1,6 +1,6 @@
 import path from "node:path";
 import url from "node:url";
-import { loadAndPatch, recursiveImports } from "rollup-plugin-recursive-imports";
+import { loadAndPatch, remapRecursive } from "rollup-plugin-recursive-imports";
 import { assert, expect, test } from "vitest";
 import { resolveModule } from "../../rollup-plugin-recursive-imports/src/loadModule.ts";
 
@@ -47,7 +47,7 @@ test("load and patch stoneberry/scan", async () => {
 test("recursive thimbleberry import", async () => {
   const rootPath = path.join(process.env.PWD!, "package.json");
   const rootUrl = url.pathToFileURL(rootPath);
-  const map = await recursiveImports("thimbleberry", rootUrl, new Set());
+  const map = await remapRecursive("thimbleberry", rootUrl, new Set());
 
   // recursive import got a child package
   expect(Object.keys(map)).contains("@reactively/core");
