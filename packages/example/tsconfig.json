@@ -18,7 +18,10 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "live-typescript": ["../live-typescript/src/index.js"]
+    }
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.vite.json" }]
