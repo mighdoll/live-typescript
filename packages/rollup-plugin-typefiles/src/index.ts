@@ -1,4 +1,4 @@
-export * from "./plugin.js";
+export * from "./typefiles.js";
 
-import plugin from "./plugin.js";
-export default plugin;
+import typefiles from "./typefiles.js";
+export default typefiles;
