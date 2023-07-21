@@ -43,7 +43,7 @@ import, the user would have to use the mod-hash specifier to choose a particular
 let rootUrl = new URL("file:///");
 
 /** trigger on source code that imports from a package with this suffix attached */
-const suffix = "?imports";
+const suffix = "?remapImports".toLowerCase();
 
 /** @param cwd - absolute file system path to start the search for packages.
  * Typically this is the directory containing package.json and node_modules.
@@ -53,10 +53,10 @@ export default function plugin(cwd: string) {
   rootUrl = url.pathToFileURL(rootPath);
 
   return {
-    name: "recursive-imports",
+    name: "remap-imports",
     load,
     resolveId,
-    enforce: "pre"
+    enforce: "pre",
   };
 }
 
@@ -71,7 +71,7 @@ function resolveId(
     isEntry: boolean;
   }
 ): ResolveIdResult {
-  if (source.endsWith(suffix)) {
+  if (source.toLowerCase().endsWith(suffix)) {
     return `${source}`;
   }
   return null;

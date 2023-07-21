@@ -1,4 +1,4 @@
-import thimbports from "thimbleberry?imports";
+import thimbports from "thimbleberry?remapImports";
 
 // for testing the rollup plugin on its own
 
