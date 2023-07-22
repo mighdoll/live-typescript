@@ -8,9 +8,8 @@ export default defineConfig({
     cssCodeSplit: false,
     lib: {
       formats: ["es"],
-      entry: "src/LiveTypescript.tsx",
-      name: "LiveTypescript",
-      fileName: "LiveTypescript",
+      entry: "src/index.ts",
+      fileName: "index",
     },
     rollupOptions: {
       external: [
