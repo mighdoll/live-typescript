@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "glob": "^10.3.3",
-    "import-meta-resolve": "^3.0.0",
-    "rollup-plugin-remap-imports": "workspace:*"
+    "import-meta-resolve": "^3.0.0"
   }
 }
