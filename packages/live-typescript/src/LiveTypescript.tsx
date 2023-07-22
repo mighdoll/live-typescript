@@ -34,7 +34,7 @@ const defaults: Partial<CodeEditorProps> = {
   visibleTypes: [],
 };
 
-export function CodeExample(props: CodeEditorProps): JSX.Element {
+export function LiveTypescript(props: CodeEditorProps): JSX.Element {
   const monaco = useMonaco();
   const settings = { ...defaults, ...props };
   const { setupMonaco, typeFiles, visibleTypes, height, width, code } =

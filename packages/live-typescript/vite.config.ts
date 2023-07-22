@@ -8,9 +8,9 @@ export default defineConfig({
     cssCodeSplit: false,
     lib: {
       formats: ["es"],
-      entry: "src/CodeExample.tsx",
-      name: "CodeExample",
-      fileName: "CodeExample",
+      entry: "src/LiveTypescript.tsx",
+      name: "LiveTypescript",
+      fileName: "LiveTypescript",
     },
     rollupOptions: {
       external: [

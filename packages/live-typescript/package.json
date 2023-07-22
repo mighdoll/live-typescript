@@ -1,6 +1,6 @@
 {
   "name": "live-typescript",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "dependencies": {
     "@monaco-editor/react": "^4.5.1",
     "monaco-editor": "^0.40.0",
@@ -15,14 +15,14 @@
     "react": ">=17"
   },
   "type": "module",
-  "main": "dist/CodeExample.js",
-  "module": "dist/CodeExample.js",
-  "types": "dist/CodeExample.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/CodeExample.js",
-      "require": "./dist/CodeExample.js",
-      "types": "./dist/CodeExample.d.ts"
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     },
     "./style.css": {
       "import": "./dist/style.css",

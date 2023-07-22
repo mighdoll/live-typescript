@@ -1,25 +1,25 @@
-import { CodeExample } from "live-typescript";
+import { LiveTypescript } from "live-typescript";
 import "live-typescript/style.css";
 import "react";
 import thimbleberryCode from "thimbleberry?remapImports";
 import thimbleberryTypeFiles from "thimbleberry?typeFiles";
 
-export interface ThimbleberryCodeExampleProps {
+export interface ThimbleberryLive {
   code: string;
 }
 
 export function ThimbleberryExample(
-  props: ThimbleberryCodeExampleProps
+  props: ThimbleberryLive
 ): JSX.Element {
   const { code } = props;
 
   return (
-    <CodeExample
+    <LiveTypescript
       {...{
         embeddedPackages: thimbleberryCode,
         typeFiles: thimbleberryTypeFiles,
         code,
       }}
-    ></CodeExample>
+    ></LiveTypescript>
   );
 }

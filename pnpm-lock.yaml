@@ -178,9 +178,6 @@ importers:
       import-meta-resolve:
         specifier: ^3.0.0
         version: 3.0.0
-      rollup-plugin-remap-imports:
-        specifier: workspace:*
-        version: link:../rollup-plugin-remap-imports
     devDependencies:
       '@rollup/plugin-typescript':
         specifier: ^11.1.2
