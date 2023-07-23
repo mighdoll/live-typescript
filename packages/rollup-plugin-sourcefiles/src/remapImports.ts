@@ -1,5 +1,7 @@
+import url from "node:url";
 import { resolveModule } from "./loadModule.js";
 import { loadAndPatch } from "./patchModule.js";
+import { isBareSpecifier } from "./stringUtil.js";
 
 /*
 map will be set to a record of module specifiers to the module code, including recursively
@@ -33,39 +35,52 @@ This is so that user entered packages imports statements will work w/o patching 
 import, the user would have to use the mod-hash specifier to choose a particular one..)
 */
 
+export interface RemappedImports {
+  importMap: Record<string, string>;
+  pkgPaths: Record<string, string>;
+}
 
 /**
  * Load and link code for this package and all recursively imported packages.
- * The import statements in the loaded code is patched to import via uniqified
+ * The import statements in the loaded code are patched to import via uniqified
  * ids for each module.
  *
- * @returns a map with the uniqified ids and bare imports as keys and the code as values.
+ * @returns a map with the uniqified ids and bare imports as keys and the code as values
+ * and a map of package names to file paths for all bare imports
  */
-export async function remapRecursive(
+export async function remapImports(
   pkg: string,
   baseUrl: URL,
   found: Set<string>
-): Promise<Record<string, string>> {
+): Promise<RemappedImports> {
   const pkgUrl = resolveModule(pkg, baseUrl);
+  const pkgPath = url.fileURLToPath(pkgUrl);
+  const pkgPaths = isBareSpecifier(pkg) ? { [pkg]: pkgPath } : {};
   if (found.has(pkgUrl.href)) {
-    return {};
+    return { importMap: {}, pkgPaths };
   } else {
     found.add(pkgUrl.href);
   }
 
   // load code and child imports from this package
-  const { map, imports } = await loadAndPatch(pkgUrl, pkg);
+  const { importMap, imports } = await loadAndPatch(pkgUrl, pkg);
 
   // recurse to collect imports from this package
-  const childMaps: Record<string, string>[] = [];
+  const childResults: RemappedImports[] = [];
   for (const importPkg of imports) {
-    const results = await remapRecursive(importPkg, pkgUrl, found);
-    childMaps.push(results);
+    const results = await remapImports(importPkg, pkgUrl, found);
+    childResults.push(results);
   }
 
-  const combinedMap = childMaps.reduce(
-    (m, combined) => ({ ...m, ...combined }),
-    map
+  const pkgResult: RemappedImports = { importMap, pkgPaths };
+
+  const combinedResults = childResults.reduce(
+    (child, combined) => ({
+      pkgPaths: { ...child.pkgPaths, ...combined.pkgPaths },
+      importMap: { ...child.importMap, ...combined.importMap },
+    }),
+    pkgResult
   );
-  return combinedMap;
+
+  return combinedResults;
 }

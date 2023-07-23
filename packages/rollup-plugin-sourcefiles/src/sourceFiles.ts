@@ -4,6 +4,8 @@ import url from "node:url";
 import { CustomPluginOptions, LoadResult, ResolveIdResult } from "rollup";
 import { Plugin } from "vite";
 import { glob } from "glob";
+import { remapImports } from "./remapImports.js";
+import { collectTypeFiles } from "./typeFiles.js";
 
 let rootUrl = new URL("file:///");
 
@@ -60,6 +62,14 @@ async function load(id: string): Promise<LoadResult> {
   return null;
 }
 
+export interface SourceFiles {
+  /** map of imports bare and synthetic to code text, suitable for a browser importmap */
+  importMap: Record<string, string>;
+
+  /** map of synethic file urls to .d.ts and package.json files, suitable for monaco */
+  typeFiles: Record<string, string>;
+}
+
 /*
   find the package.json and all '*.d.ts' files in the package
   returns synthetic file urls as if the baseUrl was the root of the filesystem
@@ -67,7 +77,10 @@ async function load(id: string): Promise<LoadResult> {
 export async function sourceFiles(
   pkg: string,
   baseUrl: URL
-): Promise<Record<string, string>> {
-  // TODO call remapImports and typeFiles
-  return {}
+): Promise<SourceFiles> {
+  const { importMap, pkgPaths } = await remapImports(pkg, baseUrl, new Set());
+  const pkgPath = pkgPaths[pkg];
+  const typeFiles = await collectTypeFiles(pkg, pkgPath);
+
+  return { importMap, typeFiles };
 }

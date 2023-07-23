@@ -5,7 +5,7 @@ import { StringPatch, isBareSpecifier, replaceStrings } from "./stringUtil.js";
 
 export interface PatchedModule {
   imports: string[];
-  map: Record<string, string>;
+  importMap: Record<string, string>;
 }
 
 /** load code and child imports from this package */
@@ -31,10 +31,10 @@ export async function loadAndPatch(
   if (isBareSpecifier(pkg)) {
     entries.push([pkg, patchedContents]);
   }
-  const map = Object.fromEntries(entries);
+  const importMap = Object.fromEntries(entries);
   const imports = importLocations.map((i) => i.specifier);
 
-  return { map, imports };
+  return { importMap, imports };
 }
 
 async function patchImports(

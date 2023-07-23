@@ -1,9 +1,6 @@
 import fs from "fs/promises";
-import path from "node:path";
-import url from "node:url";
-import { CustomPluginOptions, LoadResult, ResolveIdResult } from "rollup";
-import { Plugin } from "vite";
 import { glob } from "glob";
+import path from "node:path";
 
 /*
   find the package.json and all '*.d.ts' files in the package
@@ -11,10 +8,10 @@ import { glob } from "glob";
 */
 export async function collectTypeFiles(
   pkg: string,
-  baseUrl: URL
+  pkgPath: string
 ): Promise<Record<string, string>> {
   // find package.json
-  const packageJsonPath = await findPackageJson(""); // TODO
+  const packageJsonPath = await findPackageJson(pkgPath); // TODO
 
   // find .d.ts files
   const packagePath = path.resolve(packageJsonPath, "..");
@@ -41,8 +38,16 @@ export async function collectTypeFiles(
   return map;
 }
 
-export async function findPackageJson(codePath: string): Promise<string> {
-  // TODO search up the path to find path containing package.json
-
-  return "";
+/** search up the path from a resolved module path to find package.json */
+export async function findPackageJson(pkgPath: string): Promise<string> {
+  let dirPath = path.resolve(pkgPath, "..");
+  while (dirPath !== "/") {
+    const packageJsonPath = path.join(dirPath, "package.json");
+    const fStat = await fs.stat(packageJsonPath).catch(() => null);
+    if (fStat?.isFile()) {
+      return packageJsonPath;
+    }
+    dirPath = path.resolve(dirPath, "..");
+  }
+  throw new Error(`could not find package.json in ${pkgPath}`);
 }
