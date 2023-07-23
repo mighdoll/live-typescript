@@ -1,9 +1,7 @@
-import fs from "fs/promises";
 import path from "node:path";
 import url from "node:url";
 import { CustomPluginOptions, LoadResult, ResolveIdResult } from "rollup";
 import { Plugin } from "vite";
-import { glob } from "glob";
 import { remapImports } from "./remapImports.js";
 import { collectTypeFiles } from "./typeFiles.js";
 
