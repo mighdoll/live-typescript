@@ -65,6 +65,9 @@ importers:
       rollup-plugin-remap-imports:
         specifier: workspace:*
         version: link:../rollup-plugin-remap-imports
+      rollup-plugin-sourcefiles:
+        specifier: workspace:*
+        version: link:../rollup-plugin-sourcefiles
       rollup-plugin-typefiles:
         specifier: workspace:*
         version: link:../rollup-plugin-typefiles

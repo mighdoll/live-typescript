@@ -1,8 +1,7 @@
 import { LiveTypescript } from "live-typescript";
 import "live-typescript/style.css";
 import "react";
-import thimbleberryCode from "thimbleberry?remapImports";
-import thimbleberryTypeFiles from "thimbleberry?typeFiles";
+import thimbSrc from "thimbleberry?sourceFiles";
 
 export interface ThimbleberryLive {
   code: string;
@@ -16,8 +15,8 @@ export function ThimbleberryExample(
   return (
     <LiveTypescript
       {...{
-        embeddedPackages: thimbleberryCode,
-        typeFiles: thimbleberryTypeFiles,
+        embeddedPackages: thimbSrc.importMap,
+        typeFiles: thimbSrc,
         code,
       }}
     ></LiveTypescript>
