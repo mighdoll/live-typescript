@@ -1,9 +1,11 @@
-import thimbImports from "thimbleberry?remapImports";
-import thimbTypes from "thimbleberry?typeFiles";
+import thimbSources from "thimbleberry?sourceFiles";
 
-// for testing the rollup plugin on its own
+// for testing the rollup plugin on its own w/o vite
 
-export function foo() {
-  console.log("thimbTypes", thimbTypes);
-  console.log("thimImports", thimbImports);
+function main() {
+  const { importMap, typeFiles } = thimbSources;
+  console.log("importMap:\n ", [...Object.keys(importMap)].join("\n  "));
+  console.log("typeFiles:\n ", [...Object.keys(typeFiles)].join("\n  "));
 }
+
+main();
