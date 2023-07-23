@@ -16,7 +16,7 @@ export function ThimbleberryExample(
     <LiveTypescript
       {...{
         embeddedPackages: thimbSrc.importMap,
-        typeFiles: thimbSrc,
+        typeFiles: thimbSrc.typeFiles,
         code,
       }}
     ></LiveTypescript>
