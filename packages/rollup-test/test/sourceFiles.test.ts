@@ -14,15 +14,18 @@ test("thimbleberry sourceFiles", async () => {
 
   // recursive import got a child package
   expect(Object.keys(importMap)).contains("@reactively/core");
+
+  verifyTypeFiles(pkg, typeFiles);
 });
 
-test.only("stoneberry/scan", async () => {
+test("stoneberry/scan", async () => {
   const rootPath = path.join(process.env.PWD!, "package.json");
   const rootUrl = url.pathToFileURL(rootPath);
 
   const pkg = "stoneberry/scan";
   const { importMap, typeFiles } = await sourceFiles(pkg, rootUrl);
   verifyImportMap(pkg, importMap);
+  verifyTypeFiles(pkg, typeFiles);
   // console.log("code:\n ", [...Object.keys(importMap)].join("\n  "));
   // console.log("types:\n ", [...Object.keys(typeFiles)].join("\n  "));
 });
@@ -60,3 +63,19 @@ function verifyImportHashIds(map: Record<string, string>): void {
     });
   });
 }
+
+function verifyTypeFiles(pkg: string, typeFiles: Record<string, string>): void {
+  const files = [...Object.keys(typeFiles)];
+  const packageJsonFile = files.filter((f) =>
+    f.endsWith(`${pkg}/package.json`)
+  );
+  expect(packageJsonFile.length).toBe(1);
+  const dtsFiles = files.filter((f) => f.endsWith(`.d.ts`));
+  expect(dtsFiles.length).toBeGreaterThan(10);
+
+  files.forEach((f) => {
+    const prefix = f.startsWith(`file:///node_modules/${pkg}`);
+    assert(prefix, `file ${f} does not start with file:///node_modules/${pkg}`);
+  });
+}
+
