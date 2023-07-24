@@ -7,18 +7,10 @@ export interface ThimbleberryLive {
   code: string;
 }
 
-export function ThimbleberryExample(
-  props: ThimbleberryLive
-): JSX.Element {
+export function ThimbleberryExample(props: ThimbleberryLive): JSX.Element {
   const { code } = props;
 
   return (
-    <LiveTypescript
-      {...{
-        embeddedPackages: thimbSrc.importMap,
-        typeFiles: thimbSrc.typeFiles,
-        code,
-      }}
-    ></LiveTypescript>
+    <LiveTypescript {...{ embeddedPackages: thimbSrc, code }}></LiveTypescript>
   );
 }

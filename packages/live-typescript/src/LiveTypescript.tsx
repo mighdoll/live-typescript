@@ -12,34 +12,40 @@ loader.config({
   paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.40.0/min/vs" },
 });
 
-interface CodeEditorProps {
+export interface SourceFiles {
+  /** map of imports bare and synthetic to code text, suitable for a browser importmap */
+  importMap: Record<string, string>;
+
+  /** map of synethic file urls to .d.ts and package.json files, suitable for monaco */
+  typeFiles: Record<string, string>;
+}
+
+export interface LiveTypescriptProps {
   setupMonaco?: SetupMonaco;
   height?: number | string;
   width?: number | string;
   code?: string;
-  packages?: string[];
-  embeddedPackages?: Record<string, string>;
-  typeFiles?: Record<string, string>;
+  npmPackages?: string[];
+  embeddedPackages?: SourceFiles;
   visibleTypes?: string[];
   className?: string;
 }
 
-const defaults: Partial<CodeEditorProps> = {
+const defaults: Partial<LiveTypescriptProps> = {
   height: "unset",
   width: "unset",
   code: "// hello world",
-  packages: [],
-  embeddedPackages: {},
-  typeFiles: {},
+  npmPackages: [],
   visibleTypes: [],
+  embeddedPackages: { importMap: {}, typeFiles: {} },
 };
 
-export function LiveTypescript(props: CodeEditorProps): JSX.Element {
+export function LiveTypescript(props: LiveTypescriptProps): JSX.Element {
   const monaco = useMonaco();
   const settings = { ...defaults, ...props };
-  const { setupMonaco, typeFiles, visibleTypes, height, width, code } =
-    settings;
-  const { packages, embeddedPackages, className } = settings;
+  const { setupMonaco, visibleTypes, height, width, code } = settings;
+  const { npmPackages, embeddedPackages, className } = settings;
+  const { importMap, typeFiles } = embeddedPackages!;
   const [compiledCode, setCompiledCode] = useState(transpile(code!));
 
   const options: monaco_editor.editor.IStandaloneEditorConstructionOptions = {
@@ -81,7 +87,7 @@ export function LiveTypescript(props: CodeEditorProps): JSX.Element {
     [setCompiledCode]
   );
 
-  const importScript = importMapScript(packages!, embeddedPackages);
+  const importScript = importMapScript(npmPackages!, importMap);
   const containerClasses = `codeContainer ${className || ""}`.trim();
 
   const html = `
