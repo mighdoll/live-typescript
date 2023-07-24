@@ -26,7 +26,7 @@ export interface LiveTypescriptProps {
   width?: number | string;
   code?: string;
   npmPackages?: string[];
-  embeddedPackages?: SourceFiles;
+  embeddedPackages?: SourceFiles[];
   visibleTypes?: string[];
   className?: string;
 }
@@ -37,15 +37,25 @@ const defaults: Partial<LiveTypescriptProps> = {
   code: "// hello world",
   npmPackages: [],
   visibleTypes: [],
-  embeddedPackages: { importMap: {}, typeFiles: {} },
+  embeddedPackages: [],
 };
+
+function combineSouceFiles(array: SourceFiles[]): SourceFiles {
+  const emptyMaps: SourceFiles = { importMap: {}, typeFiles: {} };
+  return array.reduce((elem, combined) => {
+    return {
+      importMap: { ...elem.importMap, ...combined.importMap },
+      typeFiles: { ...elem.typeFiles, ...combined.typeFiles },
+    };
+  }, emptyMaps);
+}
 
 export function LiveTypescript(props: LiveTypescriptProps): JSX.Element {
   const monaco = useMonaco();
   const settings = { ...defaults, ...props };
   const { setupMonaco, visibleTypes, height, width, code } = settings;
   const { npmPackages, embeddedPackages, className } = settings;
-  const { importMap, typeFiles } = embeddedPackages!;
+  const { importMap, typeFiles } = combineSouceFiles(embeddedPackages!);
   const [compiledCode, setCompiledCode] = useState(transpile(code!));
 
   const options: monaco_editor.editor.IStandaloneEditorConstructionOptions = {
