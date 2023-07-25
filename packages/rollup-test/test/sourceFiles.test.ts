@@ -1,4 +1,3 @@
-import { importMap } from "thimbleberry?sourceFiles";
 import path from "node:path";
 import url from "node:url";
 import { sourceFiles } from "rollup-plugin-sourcefiles";
@@ -66,16 +65,19 @@ function verifyImportHashIds(map: Record<string, string>): void {
 
 function verifyTypeFiles(pkg: string, typeFiles: Record<string, string>): void {
   const files = [...Object.keys(typeFiles)];
+
+  const pkgBase = pkg.split("/", 1)[0]
   const packageJsonFile = files.filter((f) =>
-    f.endsWith(`${pkg}/package.json`)
+    f.endsWith(`${pkgBase}/package.json`)
   );
   expect(packageJsonFile.length).toBe(1);
+
   const dtsFiles = files.filter((f) => f.endsWith(`.d.ts`));
   expect(dtsFiles.length).toBeGreaterThan(10);
 
   files.forEach((f) => {
-    const prefix = f.startsWith(`file:///node_modules/${pkg}`);
-    assert(prefix, `file ${f} does not start with file:///node_modules/${pkg}`);
+    const prefix = f.startsWith(`file:///node_modules/${pkgBase}`);
+    assert(prefix, `file ${f} does not start with file:///node_modules/${pkgBase}`);
   });
 }
 

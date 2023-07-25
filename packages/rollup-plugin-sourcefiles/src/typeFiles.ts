@@ -25,12 +25,15 @@ export async function collectTypeFiles(
   });
   const loaded = await Promise.all(loadingFiles);
 
+  // for package entry point specifiers, return just the base package 
+  const pkgBase = pkg.split("/", 1)[0]
+
   // remap to synthetic file urls
   const fileEntries = loaded.map(([f, contents]) => {
     // since the upstream code will tell monaco that the users example code is at the fs root,
     // we'll pretend that the node_modules folder is also at the root
     const relPath = path.relative(packagePath, f);
-    const rootedFileUrl = `file:///node_modules/${pkg}/${relPath}`;
+    const rootedFileUrl = `file:///node_modules/${pkgBase}/${relPath}`;
     return [rootedFileUrl, contents];
   });
   const map = Object.fromEntries(fileEntries);
