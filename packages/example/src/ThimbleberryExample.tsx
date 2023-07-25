@@ -12,8 +12,7 @@ export function ThimbleberryExample(props: ThimbleberryLive): JSX.Element {
 
   return (
     <LiveTypescript
-      embeddedPackages={[thimbSrc]}
-      {...{ code }}
+      {...{ embeddedPackages: [thimbSrc], code }}
     ></LiveTypescript>
   );
 }
