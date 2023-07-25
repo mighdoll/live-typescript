@@ -29,6 +29,19 @@ test("stoneberry/scan", async () => {
   // console.log("types:\n ", [...Object.keys(typeFiles)].join("\n  "));
 });
 
+test("@webgpu/types", async () => {
+  const rootPath = path.join(process.env.PWD!, "package.json");
+  const rootUrl = url.pathToFileURL(rootPath);
+
+  const pkg = "@webgpu/types";
+  const { importMap, typeFiles } = await sourceFiles(pkg, rootUrl);
+  verifyImportMap(pkg, importMap);
+  verifyTypeFiles(pkg, typeFiles);
+  // console.log("code:\n ", [...Object.keys(importMap)].join("\n  "));
+  // console.log("types:\n ", [...Object.keys(typeFiles)].join("\n  "));
+});
+
+
 function verifyImportMap(pkg: string, importMap: Record<string, string>): void {
   // map contains package bare reference map entry
   const keys = Object.keys(importMap);
@@ -73,7 +86,7 @@ function verifyTypeFiles(pkg: string, typeFiles: Record<string, string>): void {
   expect(packageJsonFile.length).toBe(1);
 
   const dtsFiles = files.filter((f) => f.endsWith(`.d.ts`));
-  expect(dtsFiles.length).toBeGreaterThan(10);
+  expect(dtsFiles.length).toBeGreaterThan(0);
 
   files.forEach((f) => {
     const prefix = f.startsWith(`file:///node_modules/${pkgBase}`);

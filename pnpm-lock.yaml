@@ -249,6 +249,9 @@ importers:
 
   packages/rollup-test:
     dependencies:
+      '@webgpu/types':
+        specifier: ^0.1.34
+        version: 0.1.34
       stoneberry:
         specifier: ^0.1.13
         version: 0.1.13

@@ -11,7 +11,7 @@ export async function collectTypeFiles(
   pkgPath: string
 ): Promise<Record<string, string>> {
   // find package.json
-  const packageJsonPath = await findPackageJson(pkgPath); // TODO
+  const packageJsonPath = await findPackageJson(pkgPath); 
 
   // find .d.ts files
   const packagePath = path.resolve(packageJsonPath, "..");
