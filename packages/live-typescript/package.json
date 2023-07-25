@@ -1,6 +1,6 @@
 {
   "name": "live-typescript",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "dependencies": {
     "@monaco-editor/react": "^4.5.1",
     "monaco-editor": "^0.40.0",
