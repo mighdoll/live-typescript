@@ -25,8 +25,6 @@ test("stoneberry/scan", async () => {
   const { importMap, typeFiles } = await sourceFiles(pkg, rootUrl);
   verifyImportMap(pkg, importMap);
   verifyTypeFiles(pkg, typeFiles);
-  // console.log("code:\n ", [...Object.keys(importMap)].join("\n  "));
-  // console.log("types:\n ", [...Object.keys(typeFiles)].join("\n  "));
 });
 
 test("@webgpu/types", async () => {
@@ -37,8 +35,6 @@ test("@webgpu/types", async () => {
   const { importMap, typeFiles } = await sourceFiles(pkg, rootUrl);
   verifyImportMap(pkg, importMap);
   verifyTypeFiles(pkg, typeFiles);
-  // console.log("code:\n ", [...Object.keys(importMap)].join("\n  "));
-  // console.log("types:\n ", [...Object.keys(typeFiles)].join("\n  "));
 });
 
 
