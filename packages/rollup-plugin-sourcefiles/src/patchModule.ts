@@ -15,17 +15,9 @@ export async function loadAndPatch(
 ): Promise<PatchedModule> {
   const { contents, hashId } = await cachedLoadModule(pkgUrl, pkg);
 
-  // esbuild to strip sourcemaps for now
-  const transformed = await esbuild.transform(contents, {
-    format: "esm",
-    target: "es2022",
-  });
-  const importLocations = await parseModule(transformed.code);
-  const patchedContents = await patchImports(
-    transformed.code,
-    importLocations,
-    pkgUrl
-  );
+  const code = await stripJsSourcemaps(pkgUrl, contents);
+  const importLocations = await parseModule(code);
+  const patchedContents = await patchImports(code, importLocations, pkgUrl);
 
   const entries: [string, string][] = [[hashId, patchedContents]];
   if (isBareSpecifier(pkg)) {
@@ -35,6 +27,22 @@ export async function loadAndPatch(
   const imports = importLocations.map((i) => i.specifier);
 
   return { importMap, imports };
+}
+
+async function stripJsSourcemaps(
+  pkgUrl: URL,
+  contents: string
+): Promise<string> {
+  if (pkgUrl.href.endsWith(".js")) {
+    // esbuild to strip sourcemaps for now
+    const transformed = await esbuild.transform(contents, {
+      format: "esm",
+      target: "es2022",
+    });
+    return transformed.code;
+  } else {
+    return contents;
+  }
 }
 
 async function patchImports(
