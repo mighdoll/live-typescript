@@ -1,7 +1,7 @@
 {
   "name": "rollup-plugin-sourcefiles",
   "type": "module",
-  "version": "0.2.0",
+  "version": "0.2.4",
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
