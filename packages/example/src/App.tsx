@@ -1,23 +1,44 @@
 import "live-typescript/style.css";
-import { mapN } from "thimbleberry";
-import { ThimbleberryExample } from "./ThimbleberryExample";
+import pkgSource from "thimbleberry?sourceFiles";
 
 export function App(): JSX.Element {
-  return <ThimbleberryExample {...{ code: exampleCode() }} />;
+  return (
+    <div>
+      <UsePackage />
+      <UsePackageWrapper />
+    </div>
+  );
 }
 
-function example(): void {
-  const seq = mapN(10).join(" ");
-  document.body.innerHTML = `<div> ${seq} </div>`;
+/* example of using LiveTypescript directly */
+import { LiveTypescript } from "live-typescript";
+
+export function UsePackage(): JSX.Element {
+  return (
+    <LiveTypescript
+      embeddedPackages={[pkgSource]}
+      code="
+        import { mapN } from 'thimbleberry';
+
+        const seq = mapN(10).join(' ');
+        document.body.innerHTML = `<div> ${seq} </div>`;
+      "
+    />
+  );
 }
 
-/** @return example function body as a string */
-function exampleCode(): string {
-  const codeLines = example.toString().split("\n");
-  const codeImport = 'import { mapN } from "thimbleberry";\n';
-  const bodyLines = codeLines
-    .slice(1, codeLines.length - 1)
-    .map((s) => s.trim());
-  const code = [codeImport, ...bodyLines].join("\n");
-  return code;
+/* example of using a wrapper around LiveTypescript with embeddedPackages in the wrapper */
+import { ThimbleberryExample } from "./ThimbleberryExample";
+
+export function UsePackageWrapper(): JSX.Element {
+  return (
+    <ThimbleberryExample
+      code="
+        import { mapN } from 'thimbleberry';
+
+        const seq = mapN(10).join(' ');
+        document.body.innerHTML = `<div> ${seq} </div>`;
+      "
+    />
+  );
 }

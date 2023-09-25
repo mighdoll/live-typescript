@@ -1,14 +1,35 @@
-A simple React component to show live typescript code samples.
+A simple React component to show live Typescript code samples.
 
 - TypesScript hinting and error checking using the Monaco editor from VS Code.
-- Code examples are vanilla typescript, not React components. Add any libraries you like.
-- Live preview isolated in an iframe.
+- Your example code is vanilla Typescript, depend on any libraries you like.
+- You can depend on local packages (not just public packages on npm).
+- Live preview, isolated in an iframe.
 - Instant refresh, transpiles with sucrase.
 - Docusaurus compatible.
 
-Importing types for custom libraries is straightforward but not automatic.
-live-typescript provides a hook to configure Monaco. To add a custom library,
-call `addExtraLib()` with the text of the library's package.json
-and .d.ts type definition files. Here's an [example][].
+Here's a simple example:
 
-[example]: https://github.com/mighdoll/live-typescript/tree/main/packages/example/ThimbleberryExample.tsx
+```
+  <LiveTypescript code="console.log('hello world');"/>
+```
+
+To use modules in your example code, use the provided plugin in your vite or rollup build:
+[rollup-plugin-sourcefiles].
+
+```
+  import pkgSource from "thimbleberry?sourceFiles";
+
+  <LiveTypescript embeddedPackages={[pkgSource]}
+      code="
+        import { mapN } from 'thimbleberry';
+
+        const seq = mapN(10).join(' ');
+        document.body.innerHTML = `<div> ${seq} </div>`;
+      "
+    > </LiveTypescript>
+```
+
+Here's a complete [example][] using vite.
+
+[example]: https://github.com/mighdoll/live-typescript/tree/main/packages/example/App.tsx
+[rollup-plugin-sourcefiles]: https://github.com/mighdoll/live-typescript/tree/main/packages/rollup-plugin-sourcefiles
