@@ -5,7 +5,14 @@ import { Plugin } from "vite";
 import { remapImports } from "./remapImports.js";
 import { collectTypeFiles } from "./typeFiles.js";
 
+interface ConfigOptions {
+  debugTypeFiles?: boolean;
+  debugImportMap?: boolean;
+}
+
 let rootUrl = new URL("file:///");
+
+let config: ConfigOptions = {};
 
 /** trigger on source code that imports from a package with this suffix attached */
 const suffix = "?sourceFiles".toLowerCase();
@@ -20,7 +27,11 @@ const suffix = "?sourceFiles".toLowerCase();
  * @param cwd - absolute file system path to start the search for packages.
  * Typically this is the directory containing package.json and node_modules.
  */
-export default function typeFiles(cwd: string): Plugin {
+export default function typeFiles(
+  cwd: string,
+  options?: ConfigOptions
+): Plugin {
+  config = options || {};
   const rootPath = path.join(cwd, "package.json");
   rootUrl = url.pathToFileURL(rootPath);
 
@@ -77,8 +88,25 @@ export async function sourceFiles(
   baseUrl: URL
 ): Promise<SourceFiles> {
   const { importMap, pkgPaths } = await remapImports(pkg, baseUrl, new Set());
+  if (config.debugImportMap) {
+    console.log(
+      "import map:\n ",
+      Object.entries(importMap)
+        .map(([pkg, text]) => `${pkg} => ${text.length} chars`)
+        .join("\n  ")
+    );
+  }
+
   const pkgPath = pkgPaths[pkg];
   const typeFiles = await collectTypeFiles(pkg, pkgPath);
+  if (config.debugTypeFiles) {
+    console.log(
+      "type files:\n ",
+      Object.entries(typeFiles)
+        .map(([url, text]) => `${url} => ${text.length} chars`)
+        .join("\n  ")
+    );
+  }
 
   return { importMap, typeFiles };
 }
