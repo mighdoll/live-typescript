@@ -21,12 +21,23 @@ export interface SourceFiles {
 }
 
 export interface LiveTypescriptProps {
+  /** hook for custom setup of monaco */
   setupMonaco?: SetupMonaco;
+
+  /** height css value for the monaco editor */
   height?: number | string;
+
+  /** width css value for the monaco editor */
   width?: number | string;
+
+  /** typescript code text to display and execute */
   code?: string;
+
   npmPackages?: string[];
+
+  /** code and type files for each imported package */
   embeddedPackages?: SourceFiles[];
+
   visibleTypes?: string[];
   className?: string;
 }
