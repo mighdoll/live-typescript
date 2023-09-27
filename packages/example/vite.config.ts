@@ -7,6 +7,6 @@ export default defineConfig({
   plugins: [
     tsConfigPaths(),
     react(),
-    sourceFiles(process.env.PWD, { debugImportMap: true }),
+    sourceFiles(process.env.PWD, { }),
   ],
 });
