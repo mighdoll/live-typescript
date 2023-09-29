@@ -38,7 +38,7 @@ Here's a complete [example][] using vite.
 LiveTypescript works well in Docusaurus.
 
 Consider wrapping your LiveTypescript component in `<BrowserOnly>`. The
-current sandboxed exeuction doesn't run on the server anyway, and server side
+current sandboxed execution doesn't run on the server anyway, and server side
 rendering can lead to developer console warnings at runtime. 
 
 
