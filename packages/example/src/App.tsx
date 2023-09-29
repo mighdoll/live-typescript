@@ -1,22 +1,28 @@
 import "live-typescript/style.css";
-import pkgSource from "thimbleberry?sourceFiles";
+import { LiveTypescript } from "live-typescript";
 
-export function App(): JSX.Element {
+/* example of using LiveTypescript with a public package */
+export function PublicPackage(): JSX.Element {
   return (
-    <div>
-      <UsePackage />
-      <UsePackageWrapper />
-    </div>
+    <LiveTypescript
+      npmPackages={["thimbleberry"]} // (currently no typechecking for these)
+      code="
+        import { mapN } from 'thimbleberry';
+
+        const seq = mapN(10).join(' ');
+        document.body.innerHTML = `<div> ${seq} </div>`;
+      "
+    />
   );
 }
 
-/* example of using LiveTypescript directly */
-import { LiveTypescript } from "live-typescript";
+/* example of using LiveTypescript directly, embedding a package */
+import pkgSource from "thimbleberry?sourceFiles";
 
-export function UsePackage(): JSX.Element {
+export function EmbedPackage(): JSX.Element {
   return (
     <LiveTypescript
-      embeddedPackages={[pkgSource]}
+      embeddedPackages={[pkgSource]} // loads source and type files
       code="
         import { mapN } from 'thimbleberry';
 
@@ -30,7 +36,7 @@ export function UsePackage(): JSX.Element {
 /* example of using a wrapper around LiveTypescript with embeddedPackages in the wrapper */
 import { ThimbleberryExample } from "./ThimbleberryExample";
 
-export function UsePackageWrapper(): JSX.Element {
+export function PackageWrapper(): JSX.Element {
   return (
     <ThimbleberryExample
       code="
@@ -40,5 +46,15 @@ export function UsePackageWrapper(): JSX.Element {
         document.body.innerHTML = `<div> ${seq} </div>`;
       "
     />
+  );
+}
+
+export function App(): JSX.Element {
+  return (
+    <div>
+      <PublicPackage />
+      <EmbedPackage />
+      <PackageWrapper />
+    </div>
   );
 }
