@@ -33,12 +33,18 @@ export interface LiveTypescriptProps {
   /** typescript code text to display and execute */
   code?: string;
 
+  /** packages published to npm (packages will be downloaded from the cdn) */
   npmPackages?: string[];
 
-  /** code and type files for each imported package */
+  /** code and type files for each imported package 
+   * (package contents are loaded from your package.json dependencies 
+   *  by the provided vite/rollup build plugin) */
   embeddedPackages?: SourceFiles[];
 
+  /** packages that are visible to live code w/o explicit import statements */
   visibleTypes?: string[];
+
+  /** css class to for live typescript container */
   className?: string;
 }
 
