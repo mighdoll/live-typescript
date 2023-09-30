@@ -1,6 +1,6 @@
 import Editor, { loader, useMonaco } from "@monaco-editor/react";
 import * as monaco_editor from "monaco-editor";
-import { useCallback, useEffect, useState } from "react";
+import { CSSProperties, useCallback, useEffect, useState } from "react";
 import { transpile } from "./Transpile.js";
 import { importMapScript } from "./Imports.js";
 import "./codeExample.css";
@@ -24,11 +24,11 @@ export interface LiveTypescriptProps {
   /** hook for custom setup of monaco */
   setupMonaco?: SetupMonaco;
 
-  /** height css value for the monaco editor */
+  /** height css value for the monaco editor and output area */
   height?: number | string;
 
-  /** width css value for the monaco editor */
-  width?: number | string;
+  /** width css value for the output iframe */
+  previewWidth?: number | string;
 
   /** typescript code text to display and execute */
   code?: string;
@@ -36,8 +36,8 @@ export interface LiveTypescriptProps {
   /** packages published to npm (packages will be downloaded from the cdn) */
   npmPackages?: string[];
 
-  /** code and type files for each imported package 
-   * (package contents are loaded from your package.json dependencies 
+  /** code and type files for each imported package
+   * (package contents are loaded from your package.json dependencies
    *  by the provided vite/rollup build plugin) */
   embeddedPackages?: SourceFiles[];
 
@@ -50,7 +50,6 @@ export interface LiveTypescriptProps {
 
 const defaults: Partial<LiveTypescriptProps> = {
   height: "unset",
-  width: "unset",
   code: "// hello world",
   npmPackages: [],
   visibleTypes: [],
@@ -70,7 +69,8 @@ function combineSouceFiles(array: SourceFiles[]): SourceFiles {
 export function LiveTypescript(props: LiveTypescriptProps): JSX.Element {
   const monaco = useMonaco();
   const settings = { ...defaults, ...props };
-  const { setupMonaco, visibleTypes, height, width, code } = settings;
+  const { setupMonaco, visibleTypes, code } = settings;
+  const { height, previewWidth } = settings;
   const { npmPackages, embeddedPackages, className } = settings;
   const { importMap, typeFiles } = combineSouceFiles(embeddedPackages!);
   const [compiledCode, setCompiledCode] = useState(transpile(code!));
@@ -136,18 +136,30 @@ export function LiveTypescript(props: LiveTypescriptProps): JSX.Element {
     </html>
   `;
 
+  const iframeStyle: CSSProperties = {};
+  if (height) {
+    iframeStyle.height = height;
+  }
+  if (previewWidth) {
+    iframeStyle.width = previewWidth;
+  }
+
   return (
     <div className={containerClasses}>
       <Editor
         wrapperProps={{ className: "codeEditor" }}
-        {...{ height, width, options }}
+        {...{ height, options }}
         defaultLanguage="typescript"
         defaultValue={code}
         defaultPath="file:///index.ts"
         onChange={codeChange}
         theme="vs-light"
       />
-      <iframe srcDoc={html} className="codeExample"></iframe>
+      <iframe
+        srcDoc={html}
+        style={iframeStyle}
+        className="codeExample"
+      ></iframe>
     </div>
   );
 }

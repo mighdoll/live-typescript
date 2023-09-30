@@ -6,6 +6,8 @@ export function PublicPackage(): JSX.Element {
   return (
     <LiveTypescript
       npmPackages={["thimbleberry"]} // (currently no typechecking for these)
+      height="100px"
+      previewWidth="500px"
       code="
         import { mapN } from 'thimbleberry';
 
