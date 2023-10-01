@@ -42,5 +42,5 @@ current sandboxed execution doesn't run on the server anyway, and server side
 rendering can lead to developer console warnings at runtime. 
 
 
-[example]: https://github.com/mighdoll/live-typescript/tree/main/packages/example/App.tsx
+[example]: https://github.com/mighdoll/live-typescript/tree/main/packages/example/src/App.tsx
 [rollup-plugin-sourcefiles]: https://github.com/mighdoll/live-typescript/tree/main/packages/rollup-plugin-sourcefiles
