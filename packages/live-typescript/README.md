@@ -15,8 +15,8 @@ Here's a simple example:
   <LiveTypescript code="console.log('hello world');"/>
 ```
 
-To use modules in your example code, use the provided plugin in your vite or rollup build:
-[rollup-plugin-sourcefiles].
+To import modules in your example code, use the provided plugin in a vite or rollup build:
+[rollup-plugin-sourcefiles]. 
 
 ```
   import pkgSource from "thimbleberry?sourceFiles";
@@ -36,6 +36,10 @@ Here's a complete [example][] using vite.
 ### Docusaurus
 
 LiveTypescript works well in Docusaurus.
+
+The recommended approach is build (and test) your code examples in a separate 
+vite/rollup package build, and then import the examples package
+into your documentation build. 
 
 Consider wrapping your LiveTypescript component in `<BrowserOnly>`. The
 current sandboxed execution doesn't run on the server anyway, and server side
