@@ -1,18 +1,19 @@
-import { LiveTypescript } from "live-typescript";
+import { LiveTypescript, LiveTypescriptProps } from "live-typescript";
 import "live-typescript/style.css";
 import "react";
 import thimbSrc from "thimbleberry?sourceFiles";
 
-export interface ThimbleberryLive {
-  code: string;
-}
+/** an example wrapper around LiveTypescript with a package preinstalled */
+export function ThimbleberryExample(props: LiveTypescriptProps): JSX.Element {
+  // add thimbleberry package
+  const embeddedPackages = (props?.embeddedPackages || []).concat(thimbSrc);
 
-export function ThimbleberryExample(props: ThimbleberryLive): JSX.Element {
-  const { code } = props;
+  // (optional) make thimbleberry visible w/o explicit import
+  const visibleTypes = (props?.visibleTypes || []).concat("thimbleberry");
 
   return (
     <LiveTypescript
-      {...{ embeddedPackages: [thimbSrc], code }}
+      {...{ ...props, embeddedPackages, visibleTypes }}
     ></LiveTypescript>
   );
 }
