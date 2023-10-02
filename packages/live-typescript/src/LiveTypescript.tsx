@@ -41,7 +41,7 @@ export interface LiveTypescriptProps {
    *  by the provided vite/rollup build plugin) */
   embeddedPackages?: SourceFiles[];
 
-  /** packages that are visible to live code w/o explicit import statements */
+  /* (untested) packages that are visible to live code w/o explicit import statements */
   visibleTypes?: string[];
 
   /** css class to for live typescript container */
