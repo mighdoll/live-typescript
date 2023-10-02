@@ -1,6 +1,16 @@
 import "live-typescript/style.css";
 import { LiveTypescript } from "live-typescript";
 
+export function App(): JSX.Element {
+  return (
+    <div>
+      <PackageExample />
+      <WrapperExample />
+      <PublicPackageExample />
+    </div>
+  );
+}
+
 /* Example 1: using LiveTypescript embedding a package at build time.
  * Requires the sourceFiles plugin which works in vite and rollup.
 */ 
@@ -60,13 +70,3 @@ export function PublicPackageExample(): JSX.Element {
   );
 }
 
-
-export function App(): JSX.Element {
-  return (
-    <div>
-      <PackageExample />
-      <WrapperExample />
-      <PublicPackageExample />
-    </div>
-  );
-}
