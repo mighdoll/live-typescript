@@ -13,9 +13,7 @@ export function importMapScript(
     (pkg) => `"${pkg}": "https://esm.sh/${pkg}"`
   );
 
-  const embeddedImports = Object.entries(embeddedPackages || {}).map(
-    ([key, value]) => `"${key}": "${jsBlobUrl(value)}"`
-  );
+  const embeddedImports = blobImports(embeddedPackages || {});
   const imports = [...publicImports, ...embeddedImports].join(
     ",\n            "
   );
@@ -28,6 +26,23 @@ export function importMapScript(
         }
       </script>
   `;
+}
+
+/** convert package names and code strings to an import map entries
+ * with blob urls for the code strings.
+ */
+function blobImports(embeddedPackages: Record<string, string>): string[] {
+  // if two packages have the same code, share the same blob url
+  const blobCache = new Map<string, string>();
+
+  const embeddedImports = Object.entries(embeddedPackages || {}).map(
+    ([key, value]) => {
+      const blob = blobCache.get(value) || jsBlobUrl(value);
+      blobCache.set(value, blob);
+      return `"${key}": "${blob}"`;
+    }
+  );
+  return embeddedImports;
 }
 
 function jsBlobUrl(code: string): string {
