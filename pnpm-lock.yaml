@@ -175,9 +175,6 @@ importers:
       stoneberry:
         specifier: ^0.1.13
         version: 0.1.13
-      stoneberry-examples:
-        specifier: ^0.1.5
-        version: 0.1.5
       thimbleberry:
         specifier: ^0.1.15
         version: 0.1.15
@@ -3197,13 +3194,6 @@ packages:
   /std-env@3.3.3:
     resolution: {integrity: sha512-Rz6yejtVyWnVjC1RFvNmYL10kgjC49EOghxWn0RFqlCHGFpQx+Xe7yW3I4ceK1SGrWIGMjD5Kbue8W/udkbMJg==}
     dev: true
-
-  /stoneberry-examples@0.1.5:
-    resolution: {integrity: sha512-7t04wI7xmkO9WTzQCUnrIm2ZtzYP8kPz7f5yDD1KcpXompayFkynSqKOCVwfWJ1sFalBUlOuMAnRWarTGPu0LQ==}
-    dependencies:
-      stoneberry: 0.1.13
-      thimbleberry: 0.1.15
-    dev: false
 
   /stoneberry@0.1.13:
     resolution: {integrity: sha512-FGq5Eug9lh7ErDsS3s6S+inGhPMRshylzpVcr6SxExB2laK2k3BAcb7PCLq3A8Wn4uGGG3y0fJ4MZlonsocxWA==}
