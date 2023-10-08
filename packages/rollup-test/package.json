@@ -9,9 +9,7 @@
     "@rollup/plugin-typescript": "^11.1.2",
     "@types/node": "^20.4.4",
     "rollup": "^3.26.3",
-    "rollup-plugin-remap-imports": "workspace:*",
     "rollup-plugin-sourcefiles": "workspace:*",
-    "rollup-plugin-typefiles": "workspace:*",
     "vite": "^4.4.6",
     "vite-tsconfig-paths": "^4.2.0",
     "vitest": "^0.33.0"

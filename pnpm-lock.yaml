@@ -16,18 +16,12 @@ importers:
       live-typescript:
         specifier: workspace:*
         version: link:../live-typescript
-      monaco-editor:
-        specifier: ^0.40.0
-        version: 0.40.0
       react:
         specifier: ^18.2.0
         version: 18.2.0
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
-      rollup:
-        specifier: ^3.26.3
-        version: 3.26.3
       thimbleberry:
         specifier: ^0.1.15
         version: 0.1.15
@@ -62,15 +56,12 @@ importers:
       rimraf:
         specifier: ^5.0.1
         version: 5.0.1
-      rollup-plugin-remap-imports:
-        specifier: workspace:*
-        version: link:../rollup-plugin-remap-imports
+      rollup:
+        specifier: ^3.26.3
+        version: 3.26.3
       rollup-plugin-sourcefiles:
         specifier: workspace:*
         version: link:../rollup-plugin-sourcefiles
-      rollup-plugin-typefiles:
-        specifier: workspace:*
-        version: link:../rollup-plugin-typefiles
       tslib:
         specifier: ^2.6.0
         version: 2.6.0
@@ -133,46 +124,6 @@ importers:
         specifier: ^4.3.9
         version: 4.3.9
 
-  packages/rollup-plugin-remap-imports:
-    dependencies:
-      blueimp-md5:
-        specifier: ^2.19.0
-        version: 2.19.0
-      esbuild:
-        specifier: ^0.18.14
-        version: 0.18.14
-      import-meta-resolve:
-        specifier: ^3.0.0
-        version: 3.0.0
-      parse-imports:
-        specifier: ^1.1.2
-        version: 1.1.2
-    devDependencies:
-      '@rollup/plugin-typescript':
-        specifier: ^11.1.2
-        version: 11.1.2(rollup@3.26.3)(tslib@2.6.0)(typescript@5.1.6)
-      '@types/blueimp-md5':
-        specifier: ^2.18.0
-        version: 2.18.0
-      '@types/node':
-        specifier: ^20.4.2
-        version: 20.4.2
-      rimraf:
-        specifier: ^5.0.1
-        version: 5.0.1
-      rollup:
-        specifier: ^3.26.2
-        version: 3.26.3
-      tslib:
-        specifier: ^2.6.0
-        version: 2.6.0
-      typescript:
-        specifier: ^5.1.6
-        version: 5.1.6
-      vite:
-        specifier: ^4.4.5
-        version: 4.4.5(@types/node@20.4.2)
-
   packages/rollup-plugin-sourcefiles:
     dependencies:
       blueimp-md5:
@@ -216,37 +167,6 @@ importers:
         specifier: ^4.4.5
         version: 4.4.5(@types/node@20.4.2)
 
-  packages/rollup-plugin-typefiles:
-    dependencies:
-      glob:
-        specifier: ^10.3.3
-        version: 10.3.3
-      import-meta-resolve:
-        specifier: ^3.0.0
-        version: 3.0.0
-    devDependencies:
-      '@rollup/plugin-typescript':
-        specifier: ^11.1.2
-        version: 11.1.2(rollup@3.26.3)(tslib@2.6.0)(typescript@5.1.6)
-      '@types/node':
-        specifier: ^20.4.2
-        version: 20.4.2
-      rimraf:
-        specifier: ^5.0.1
-        version: 5.0.1
-      rollup:
-        specifier: ^3.26.2
-        version: 3.26.3
-      tslib:
-        specifier: ^2.6.0
-        version: 2.6.0
-      typescript:
-        specifier: ^5.1.6
-        version: 5.1.6
-      vite:
-        specifier: ^4.4.5
-        version: 4.4.5(@types/node@20.4.2)
-
   packages/rollup-test:
     dependencies:
       '@webgpu/types':
@@ -271,15 +191,9 @@ importers:
       rollup:
         specifier: ^3.26.3
         version: 3.26.3
-      rollup-plugin-remap-imports:
-        specifier: workspace:*
-        version: link:../rollup-plugin-remap-imports
       rollup-plugin-sourcefiles:
         specifier: workspace:*
         version: link:../rollup-plugin-sourcefiles
-      rollup-plugin-typefiles:
-        specifier: workspace:*
-        version: link:../rollup-plugin-typefiles
       vite:
         specifier: ^4.4.6
         version: 4.4.6(@types/node@20.4.4)
@@ -2607,6 +2521,7 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
     requiresBuild: true
+    dev: true
     optional: true
 
   /function-bind@1.1.1:
@@ -3208,6 +3123,7 @@ packages:
     hasBin: true
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
 
   /run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
