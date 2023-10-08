@@ -1,7 +1,9 @@
 import path from "node:path";
 import url from "node:url";
-import { sourceFiles } from "rollup-plugin-sourcefiles";
+import { setSourceFilesConfig, sourceFiles } from "rollup-plugin-sourcefiles";
 import { assert, expect, test } from "vitest";
+
+setSourceFilesConfig({debugTypeFiles: true});
 
 test("thimbleberry sourceFiles", async () => {
   const rootPath = path.join(process.env.PWD!, "package.json");
