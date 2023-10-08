@@ -14,6 +14,11 @@ let rootUrl = new URL("file:///");
 
 let config: ConfigOptions = {};
 
+/** (for testing) set the config */
+export function setSourceFilesConfig(options: ConfigOptions): void {
+  config = options;
+}
+
 /** trigger on source code that imports from a package with this suffix attached */
 const suffix = "?sourceFiles".toLowerCase();
 
