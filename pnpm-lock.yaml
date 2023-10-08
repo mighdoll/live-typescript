@@ -124,6 +124,40 @@ importers:
         specifier: ^4.3.9
         version: 4.3.9
 
+  packages/plugin-test:
+    dependencies:
+      '@webgpu/types':
+        specifier: ^0.1.34
+        version: 0.1.34
+      stoneberry:
+        specifier: ^0.1.13
+        version: 0.1.13
+      thimbleberry:
+        specifier: ^0.1.15
+        version: 0.1.15
+    devDependencies:
+      '@rollup/plugin-typescript':
+        specifier: ^11.1.2
+        version: 11.1.2(rollup@3.26.3)(tslib@2.6.0)(typescript@5.1.6)
+      '@types/node':
+        specifier: ^20.4.4
+        version: 20.4.4
+      rollup:
+        specifier: ^3.26.3
+        version: 3.26.3
+      rollup-plugin-sourcefiles:
+        specifier: workspace:*
+        version: link:../rollup-plugin-sourcefiles
+      vite:
+        specifier: ^4.4.6
+        version: 4.4.6(@types/node@20.4.4)
+      vite-tsconfig-paths:
+        specifier: ^4.2.0
+        version: 4.2.0(typescript@5.1.6)(vite@4.4.6)
+      vitest:
+        specifier: ^0.33.0
+        version: 0.33.0
+
   packages/rollup-plugin-sourcefiles:
     dependencies:
       blueimp-md5:
@@ -166,40 +200,6 @@ importers:
       vite:
         specifier: ^4.4.5
         version: 4.4.5(@types/node@20.4.2)
-
-  packages/rollup-test:
-    dependencies:
-      '@webgpu/types':
-        specifier: ^0.1.34
-        version: 0.1.34
-      stoneberry:
-        specifier: ^0.1.13
-        version: 0.1.13
-      thimbleberry:
-        specifier: ^0.1.15
-        version: 0.1.15
-    devDependencies:
-      '@rollup/plugin-typescript':
-        specifier: ^11.1.2
-        version: 11.1.2(rollup@3.26.3)(tslib@2.6.0)(typescript@5.1.6)
-      '@types/node':
-        specifier: ^20.4.4
-        version: 20.4.4
-      rollup:
-        specifier: ^3.26.3
-        version: 3.26.3
-      rollup-plugin-sourcefiles:
-        specifier: workspace:*
-        version: link:../rollup-plugin-sourcefiles
-      vite:
-        specifier: ^4.4.6
-        version: 4.4.6(@types/node@20.4.4)
-      vite-tsconfig-paths:
-        specifier: ^4.2.0
-        version: 4.2.0(typescript@5.1.6)(vite@4.4.6)
-      vitest:
-        specifier: ^0.33.0
-        version: 0.33.0
 
 packages:
 
