@@ -5,6 +5,13 @@ import { assert, expect, test } from "vitest";
 
 setSourceFilesConfig({debugTypeFiles: true});
 
+test.only("local dependency", async () => {
+  const rootPath = path.join(process.env.PWD!, "package.json");
+  const rootUrl = url.pathToFileURL(rootPath);
+  const pkg = "local-package";
+  await sourceFiles(pkg, rootUrl);
+});
+
 test("thimbleberry sourceFiles", async () => {
   const rootPath = path.join(process.env.PWD!, "package.json");
   const rootUrl = url.pathToFileURL(rootPath);

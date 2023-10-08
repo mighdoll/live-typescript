@@ -1,0 +1,14 @@
+{
+  "name": "local-package",
+  "type": "module",
+  "dependencies": {
+    "stoneberry": "^0.1.13"
+  },
+  "files": ["dist"],
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  }
+}

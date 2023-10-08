@@ -124,11 +124,24 @@ importers:
         specifier: ^4.3.9
         version: 4.3.9
 
+  packages/local-package:
+    dependencies:
+      stoneberry:
+        specifier: ^0.1.13
+        version: 0.1.13
+    devDependencies:
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
+
   packages/plugin-test:
     dependencies:
       '@webgpu/types':
         specifier: ^0.1.34
         version: 0.1.34
+      local-package:
+        specifier: workspace:*
+        version: link:../local-package
       stoneberry:
         specifier: ^0.1.13
         version: 0.1.13
@@ -138,7 +151,7 @@ importers:
     devDependencies:
       '@rollup/plugin-typescript':
         specifier: ^11.1.2
-        version: 11.1.2(rollup@3.26.3)(tslib@2.6.0)(typescript@5.1.6)
+        version: 11.1.2(rollup@3.26.3)(typescript@5.2.2)
       '@types/node':
         specifier: ^20.4.4
         version: 20.4.4
@@ -153,7 +166,7 @@ importers:
         version: 4.4.6(@types/node@20.4.4)
       vite-tsconfig-paths:
         specifier: ^4.2.0
-        version: 4.2.0(typescript@5.1.6)(vite@4.4.6)
+        version: 4.2.0(typescript@5.2.2)(vite@4.4.6)
       vitest:
         specifier: ^0.33.0
         version: 0.33.0
@@ -1425,6 +1438,25 @@ packages:
       rollup: 3.26.3
       tslib: 2.6.0
       typescript: 5.1.6
+    dev: true
+
+  /@rollup/plugin-typescript@11.1.2(rollup@3.26.3)(typescript@5.2.2):
+    resolution: {integrity: sha512-0ghSOCMcA7fl1JM+0gYRf+Q/HWyg+zg7/gDSc+fRLmlJWcW5K1I+CLRzaRhXf4Y3DRyPnnDo4M2ktw+a6JcDEg==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^2.14.0||^3.0.0
+      tslib: '*'
+      typescript: '>=3.7.0'
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+      tslib:
+        optional: true
+    dependencies:
+      '@rollup/pluginutils': 5.0.2(rollup@3.26.3)
+      resolve: 1.22.2
+      rollup: 3.26.3
+      typescript: 5.2.2
     dev: true
 
   /@rollup/pluginutils@5.0.2(rollup@3.26.3):
@@ -3355,6 +3387,19 @@ packages:
       typescript: 5.1.6
     dev: true
 
+  /tsconfck@2.1.2(typescript@5.2.2):
+    resolution: {integrity: sha512-ghqN1b0puy3MhhviwO2kGF8SeMDNhEbnKxjK7h6+fvY9JAxqvXi8y5NAHSQv687OVboS2uZIByzGd45/YxrRHg==}
+    engines: {node: ^14.13.1 || ^16 || >=18}
+    hasBin: true
+    peerDependencies:
+      typescript: ^4.3.5 || ^5.0.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      typescript: 5.2.2
+    dev: true
+
   /tslib@1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
     dev: true
@@ -3398,6 +3443,12 @@ packages:
 
   /typescript@5.1.6:
     resolution: {integrity: sha512-zaWCozRZ6DLEWAWFrVDz1H6FVXzUSfTy5FUMWsQlU8Ym5JP9eO4xkTIROFCQvhQf61z6O/G6ugw3SgAnvvm+HA==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    dev: true
+
+  /typescript@5.2.2:
+    resolution: {integrity: sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==}
     engines: {node: '>=14.17'}
     hasBin: true
     dev: true
@@ -3462,7 +3513,7 @@ packages:
       - typescript
     dev: true
 
-  /vite-tsconfig-paths@4.2.0(typescript@5.1.6)(vite@4.4.6):
+  /vite-tsconfig-paths@4.2.0(typescript@5.2.2)(vite@4.4.6):
     resolution: {integrity: sha512-jGpus0eUy5qbbMVGiTxCL1iB9ZGN6Bd37VGLJU39kTDD6ZfULTTb1bcc5IeTWqWJKiWV5YihCaibeASPiGi8kw==}
     peerDependencies:
       vite: '*'
@@ -3472,7 +3523,7 @@ packages:
     dependencies:
       debug: 4.3.4
       globrex: 0.1.2
-      tsconfck: 2.1.2(typescript@5.1.6)
+      tsconfck: 2.1.2(typescript@5.2.2)
       vite: 4.4.6(@types/node@20.4.4)
     transitivePeerDependencies:
       - supports-color
