@@ -52,7 +52,8 @@ export async function cachedLoadModule(
 
 /** search up the path from a resolved module path to find package.json */
 export async function containingPackageJson(pkgPath: string): Promise<string> {
-  let dirPath = path.resolve(pkgPath, "..");
+  const realPkgPath = await fs.realpath(pkgPath);
+  let dirPath = path.resolve(realPkgPath, "..");
   while (dirPath !== "/") {
     const packageJsonPath = path.join(dirPath, "package.json");
     const fStat = await fs.stat(packageJsonPath).catch(() => null);
@@ -70,7 +71,8 @@ export async function packageJsonForPkg(
   pkg: string,
   basePath: string
 ): Promise<string> {
-  const nodeModulesPath = path.join(basePath, "node_modules");
+  const realBasePath = await fs.realpath(basePath);
+  const nodeModulesPath = path.join(realBasePath, "node_modules");
   const nodeStat = await fs.stat(nodeModulesPath).catch(() => null);
   if (nodeStat?.isDirectory()) {
     const pkgJsonPath = path.join(nodeModulesPath, pkg, "package.json");
@@ -79,8 +81,8 @@ export async function packageJsonForPkg(
       return pkgJsonPath;
     }
   }
-  if (path.dirname(basePath) !== basePath) {
-    return packageJsonForPkg(pkg, path.dirname(basePath));
+  if (path.dirname(realBasePath) !== realBasePath) {
+    return packageJsonForPkg(pkg, path.dirname(realBasePath));
   } else {
     throw new Error(`could not find package.json for ${pkg} in ${basePath}`);
   }
