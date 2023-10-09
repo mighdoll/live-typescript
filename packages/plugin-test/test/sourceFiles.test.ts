@@ -1,15 +1,30 @@
 import path from "node:path";
 import url from "node:url";
-import { setSourceFilesConfig, sourceFiles } from "rollup-plugin-sourcefiles";
+import { sourceFiles } from "rollup-plugin-sourcefiles";
 import { assert, expect, test } from "vitest";
 
-setSourceFilesConfig({debugTypeFiles: true});
+// setSourceFilesConfig({ debugTypeFiles: true });
 
-test.only("local dependency", async () => {
+test("local dependency", async () => {
   const rootPath = path.join(process.env.PWD!, "package.json");
   const rootUrl = url.pathToFileURL(rootPath);
   const pkg = "local-package";
-  await sourceFiles(pkg, rootUrl);
+  const { importMap, typeFiles } = await sourceFiles(pkg, rootUrl);
+
+  verifyImportMap(pkg, importMap);
+  verifyTypeFiles(pkg, typeFiles);
+
+  // contains file from dist
+  const typeFileNames = Object.keys(typeFiles);
+  const foundDist = typeFileNames.find((f) =>
+    f.endsWith("local-package/dist/index.d.ts")
+  );
+  assert(foundDist);
+
+  // contains dependency type files
+  assert(typeFileNames.find((f) => f.includes("stoneberry")));   // direct dependency
+  assert(typeFileNames.find((f) => f.includes("thimbleberry"))); // recursive dependency
+  assert(typeFileNames.find((f) => f.includes("@reactively/core"))); // partitioned package name
 });
 
 test("thimbleberry sourceFiles", async () => {
@@ -45,7 +60,6 @@ test("@webgpu/types", async () => {
   verifyImportMap(pkg, importMap);
   verifyTypeFiles(pkg, typeFiles);
 });
-
 
 function verifyImportMap(pkg: string, importMap: Record<string, string>): void {
   // map contains package bare reference map entry
@@ -84,18 +98,10 @@ function verifyImportHashIds(map: Record<string, string>): void {
 function verifyTypeFiles(pkg: string, typeFiles: Record<string, string>): void {
   const files = [...Object.keys(typeFiles)];
 
-  const pkgBase = pkg.split("/", 1)[0]
   const packageJsonFile = files.filter((f) =>
-    f.endsWith(`${pkgBase}/package.json`)
+    f.endsWith(`${pkg}/package.json`)
   );
   expect(packageJsonFile.length).toBe(1);
-
-  const dtsFiles = files.filter((f) => f.endsWith(`.d.ts`));
+  const dtsFiles = files.filter((f) => f.endsWith(".d.ts"));
   expect(dtsFiles.length).toBeGreaterThan(0);
-
-  files.forEach((f) => {
-    const prefix = f.startsWith(`file:///node_modules/${pkgBase}`);
-    assert(prefix, `file ${f} does not start with file:///node_modules/${pkgBase}`);
-  });
 }
-
