@@ -36,10 +36,23 @@ async function typeFilesRecursive(
   const json = JSON.parse(jsonText);
   const root = path.resolve(packageJsonPath, "..");
   const pkgMap = await packageTypeFiles(pkg, json, root, packageJsonPath);
+  const atTypesMap = await atTypesFiles(pkg, root);
   const depsMap = await dependentTypeFiles(json, root); // recursive
-  const map = { ...pkgMap, ...depsMap };
+  const map = { ...pkgMap, ...atTypesMap, ...depsMap };
 
   return map;
+}
+async function atTypesFiles(
+  pkg: string,
+  rootPath: string
+): Promise<Record<string, string>> {
+  const atTypes = `@types/${pkg}`;
+  const pkgPath = await packageJsonForPkg(atTypes, rootPath).catch(() => null);
+  if (pkgPath) {
+    return typeFilesRecursive(atTypes, pkgPath);
+  } else {
+    return {};
+  }
 }
 
 /** finds all the *.d.ts files and returns a map to their contents with synthetic file urls.
@@ -82,6 +95,11 @@ async function dtsFiles(
   const [dtsDirects, dirEntries] = partition(filesEntries, (d: string) =>
     d.endsWith(".d.ts")
   );
+  const typeEntry = packageJson?.types || packageJson?.typings;
+  if (typeEntry) {
+    dtsDirects.push(typeEntry);
+  }
+  
   const dtsDirectPaths = dtsDirects.map((d: string) =>
     path.join(packageRoot, d)
   );
@@ -89,6 +107,7 @@ async function dtsFiles(
     const trimmed = trimPathSuffix(path);
     return `${packageRoot}/${trimmed}/**/*.d.ts`;
   });
+
 
   const foundTypeFiles = await glob(distSearch, { follow: true });
   return [...dtsDirectPaths, ...foundTypeFiles];

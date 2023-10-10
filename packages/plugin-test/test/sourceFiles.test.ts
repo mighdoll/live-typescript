@@ -61,6 +61,19 @@ test("@webgpu/types", async () => {
   verifyTypeFiles(pkg, typeFiles);
 });
 
+test("semver dependency finds @types", async () => {
+  const rootPath = path.join(process.env.PWD!, "package.json");
+  const rootUrl = url.pathToFileURL(rootPath);
+  const pkg = "semver";
+  const { typeFiles } = await sourceFiles(pkg, rootUrl);
+
+  const typeFileNames = Object.keys(typeFiles);
+
+  // contains dependency type files
+  assert(typeFileNames.find((f) => f.includes("@types/semver")));   
+});
+
+
 function verifyImportMap(pkg: string, importMap: Record<string, string>): void {
   // map contains package bare reference map entry
   const keys = Object.keys(importMap);
