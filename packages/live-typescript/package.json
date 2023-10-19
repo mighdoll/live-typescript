@@ -1,9 +1,9 @@
 {
   "name": "live-typescript",
-  "version": "0.2.7",
+  "version": "0.2.9",
   "dependencies": {
-    "@monaco-editor/react": "^4.5.1",
-    "monaco-editor": "^0.40.0",
+    "@monaco-editor/react": "^4.6.0",
+    "monaco-editor": "^0.44.0",
     "sucrase": "^3.32.0"
   },
   "scripts": {
