@@ -11,6 +11,10 @@ type SetupMonaco = (monaco: typeof monaco_editor) => void;
 loader.config({
   paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs" },
 });
+const tsLibs = import.meta.glob("../node_modules/typescript/lib/*.d.ts", {
+  as: "raw",
+  eager: true,
+});
 
 export interface SourceFiles {
   /** map of imports bare and synthetic to code text, suitable for a browser importmap */
@@ -95,14 +99,16 @@ export function LiveTypescript(props: LiveTypescriptProps): JSX.Element {
         moduleResolution: 100 as any, // "bundler"
         module: monaco.languages.typescript.ModuleKind.ESNext,
         target: monaco_editor.languages.typescript.ScriptTarget.ESNext,
-        // lib: ["DOM", "DOM.Iterable", "ESNext", "ESNext.AsyncIterable"], // TODO doesn't work, why?
+        noLib: true, // set manually below (because lib: ["esnext"] doesn't work)
+      });
+      Object.entries(tsLibs).forEach(([path, text]) => {
+        const url = "file:///" + path.slice(3);
+        monaco.languages.typescript.typescriptDefaults.addExtraLib(text, url);
       });
       Object.entries(typeFiles!).forEach(([path, text]) => {
         monaco.languages.typescript.typescriptDefaults.addExtraLib(text, path);
       });
 
-      const options = monaco.languages.typescript.typescriptDefaults.getCompilerOptions();
-      console.log("options", options);
       monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true);
 
       setupMonaco?.(monaco);
