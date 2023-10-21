@@ -98,7 +98,7 @@ export function LiveTypescript(props: LiveTypescriptProps): JSX.Element {
         types: visibleTypes,
         moduleResolution: 100 as any, // "bundler"
         module: monaco.languages.typescript.ModuleKind.ESNext,
-        target: monaco_editor.languages.typescript.ScriptTarget.ESNext,
+        target: monaco.languages.typescript.ScriptTarget.ESNext,
         noLib: true, // set manually below (because lib: ["esnext"] doesn't work)
       });
       Object.entries(tsLibs).forEach(([path, text]) => {
