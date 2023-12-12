@@ -8,7 +8,9 @@ export interface PatchedModule {
   importMap: Record<string, string>;
 }
 
-/** load code and child imports from this package */
+/** load code and child imports from this package.
+ * import references in the loaded code are replaced with references to content hashes
+ * in the importMap */
 export async function loadAndPatch(
   pkgUrl: URL,
   pkg: string
@@ -45,6 +47,10 @@ async function stripJsSourcemaps(
   }
 }
 
+
+/** replace the import specifiers in a provided javascript text with
+ * hashed ids as specifiers (e.g. `import {foo} from "bar"` becomes `import {foo} from "bar-1234567"`)
+ */
 async function patchImports(
   code: string,
   importLocations: ImportLocation[],
@@ -81,10 +87,9 @@ interface ImportLocation {
   origText: string;
 }
 
-/** load the code for a given module and return
+/** load the code for a given module and return:
  *  the code, the imported module specifieres and the text locations of the import statements
  */
-
 async function parseModule(contents: string): Promise<ImportLocation[]> {
   const parsed = await parseImports(contents);
   const mods = [...parsed].filter(

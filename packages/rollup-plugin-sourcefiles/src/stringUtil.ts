@@ -29,7 +29,7 @@ export interface StringPatch {
   newText: string;
   startIndex: number;
   endIndex: number;
-  origText: string;
+  origText: string; // TODO unused, remove?
 }
 
 export function replaceStrings(
