@@ -1,9 +1,9 @@
 {
   "name": "root",
   "scripts": {
+    "build": "pnpm build:rollup-sourcefiles && pnpm build:live-typescript",
     "build:live-typescript": "pnpm --filter live-typescript prepublish",
     "build:rollup-sourcefiles": "pnpm --filter rollup-plugin-sourcefiles* prepublish",
-    "build:all": "pnpm build:rollup-sourcefiles && pnpm build:live-typescript",
     "example": "pnpm --filter example dev",
     "rollup:test": "pnpm build:rollup-remap && pnpm build:rollup-typfiles && ",
     "dev": "pnpm build:all && pnpm example"
