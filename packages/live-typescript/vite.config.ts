@@ -11,6 +11,8 @@ export default defineConfig({
       entry: "src/index.ts",
       fileName: "index",
     },
+    sourcemap: true,
+    minify: false,
     rollupOptions: {
       external: [
         "react",
