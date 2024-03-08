@@ -37,7 +37,7 @@ Here's a complete [example][] using vite.
 
 LiveTypescript works well in Docusaurus.
 
-The recommended approach is build (and test) your code examples in a separate 
+The recommended approach is to build (and test) your code examples in a separate 
 vite/rollup package build, and then import the examples package
 into your documentation build. 
 
