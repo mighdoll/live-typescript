@@ -55,6 +55,24 @@ async function atTypesFiles(
   }
 }
 
+/** choose a virtual directory root path for this package.
+ *    pkg -> pkg
+ *    @group/pkg -> @group/pkg
+ *    pkg/sub/path.js -> pkg/sub
+ *
+ * These are used to construct a virtual file heirarchy for the .d.ts files
+ * The .d.ts virtual files can be anywhere, but must be unique.
+ */
+const fileSuffix = /(?:(?:\.jsx?)|(?:\.tsx?))$/;
+
+export function pkgRootPrefix(pkg: string): string {
+  if (fileSuffix.test(pkg)) {
+    return pkg.split("/").slice(0, -1).join("/");
+  } else {
+    return pkg;
+  }
+}
+
 /** finds all the *.d.ts files and returns a map to their contents with synthetic file urls.
  * the package.json file is also included in the map */
 async function packageTypeFiles(
@@ -73,12 +91,14 @@ async function packageTypeFiles(
   });
   const loaded = await Promise.all(loadingFiles);
 
+  let pkgRoot = pkgRootPrefix(pkg);
+
   // remap to synthetic file urls
   const fileEntries = loaded.map(([f, contents]) => {
     // since the upstream code will tell monaco that the users example code is at the fs root,
     // we'll pretend that the node_modules folder is also at the root
     const relPath = path.relative(rootPath, f);
-    const rootedFileUrl = `file:///node_modules/${pkg}/${relPath}`;
+    const rootedFileUrl = `file:///node_modules/${pkgRoot}/${relPath}`;
     return [rootedFileUrl, contents];
   });
   const pkgMap = Object.fromEntries(fileEntries);

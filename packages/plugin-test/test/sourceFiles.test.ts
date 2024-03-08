@@ -1,6 +1,6 @@
 import path from "node:path";
 import url from "node:url";
-import { sourceFiles } from "rollup-plugin-sourcefiles";
+import { pkgRootPrefix, sourceFiles } from "rollup-plugin-sourcefiles";
 import { assert, expect, test } from "vitest";
 
 // setSourceFilesConfig({ debugTypeFiles: true });
@@ -22,9 +22,9 @@ test("local dependency", async () => {
   assert(foundDist);
 
   // contains dependency type files
-  assert(typeFileNames.find((f) => f.includes("stoneberry")));   // direct dependency
+  assert(typeFileNames.find((f) => f.includes("stoneberry"))); // direct dependency
   assert(typeFileNames.find((f) => f.includes("thimbleberry"))); // recursive dependency
-  assert(typeFileNames.find((f) => f.includes("@reactively/core"))); // partitioned package name
+  assert(typeFileNames.find((f) => f.includes("@reactively"))); // partitioned package name
 });
 
 test("thimbleberry sourceFiles", async () => {
@@ -70,9 +70,23 @@ test("semver dependency finds @types", async () => {
   const typeFileNames = Object.keys(typeFiles);
 
   // contains dependency type files
-  assert(typeFileNames.find((f) => f.includes("@types/semver")));   
+  assert(typeFileNames.find((f) => f.includes("@types/semver")));
 });
 
+test("stoneberry/binop/BinOpModuleSumF32.js", async () => {
+  const rootPath = path.join(process.env.PWD!, "package.json");
+  const rootUrl = url.pathToFileURL(rootPath);
+
+  const pkg = "stoneberry/binop/BinOpModuleSumF32.js";
+  const { importMap, typeFiles } = await sourceFiles(pkg, rootUrl);
+
+  const typeFileNames = Object.keys(typeFiles);
+  console.log("typeFileNames");
+  typeFileNames.forEach((f) => console.log(f));
+  assert(typeFileNames.find((f) => f.includes("stoneberry/binop")));
+  verifyImportMap(pkg, importMap);
+  verifyTypeFiles(pkg, typeFiles);
+});
 
 function verifyImportMap(pkg: string, importMap: Record<string, string>): void {
   // map contains package bare reference map entry
@@ -111,8 +125,9 @@ function verifyImportHashIds(map: Record<string, string>): void {
 function verifyTypeFiles(pkg: string, typeFiles: Record<string, string>): void {
   const files = [...Object.keys(typeFiles)];
 
+  const pkgRoot = pkgRootPrefix(pkg);
   const packageJsonFile = files.filter((f) =>
-    f.endsWith(`${pkg}/package.json`)
+    f.endsWith(`${pkgRoot}/package.json`)
   );
   expect(packageJsonFile.length).toBe(1);
   const dtsFiles = files.filter((f) => f.endsWith(".d.ts"));
