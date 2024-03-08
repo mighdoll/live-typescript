@@ -81,8 +81,6 @@ test("stoneberry/binop/BinOpModuleSumF32.js", async () => {
   const { importMap, typeFiles } = await sourceFiles(pkg, rootUrl);
 
   const typeFileNames = Object.keys(typeFiles);
-  console.log("typeFileNames");
-  typeFileNames.forEach((f) => console.log(f));
   assert(typeFileNames.find((f) => f.includes("stoneberry/binop")));
   verifyImportMap(pkg, importMap);
   verifyTypeFiles(pkg, typeFiles);
