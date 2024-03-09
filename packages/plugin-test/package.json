@@ -21,7 +21,7 @@
     "@webgpu/types": "^0.1.40",
     "local-package": "workspace:*",
     "semver": "^7.6.0",
-    "stoneberry": "^0.2.0",
+    "stoneberry": "^0.2.1",
     "thimbleberry": "^0.2.9"
   }
 }
