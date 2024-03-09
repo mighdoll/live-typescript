@@ -3,7 +3,8 @@
   "type": "module",
   "scripts": {
     "build:plugins": "pnpm --filter rollup-plugin* prepublish",
-    "rollup:test": "pnpm build:plugins && pnpm rollup -c rollup.config.js"
+    "rollup:test": "pnpm build:plugins && pnpm rollup -c rollup.config.js", 
+    "test": "pnpm vitest"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.2",
