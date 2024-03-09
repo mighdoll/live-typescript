@@ -10,9 +10,9 @@
     "main": "./dist/index.js"
   },
   "dependencies": {
-    "stoneberry": "^0.1.13"
+    "stoneberry": "^0.2.1"
   },
   "devDependencies": {
-    "typescript": "^5.2.2"
+    "typescript": "^5.4.2"
   }
 }
